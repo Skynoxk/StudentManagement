@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class SimpleStudentManagement {
 	
-	private static void addStudent(String id, String name, float grade, String major) {
+	public static void addStudent(String id, String name, float grade, String major) {
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "Password");
             Statement studentmanage = conn.createStatement();
@@ -21,7 +21,7 @@ public class SimpleStudentManagement {
         }
     }
 
-    private static void updateStudent(String id, String name, float grade, String major) {
+    public static void updateStudent(String id, String name, float grade, String major) {
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "Password");
             Statement studentmanage = conn.createStatement();
@@ -33,7 +33,7 @@ public class SimpleStudentManagement {
         }
     }
 
-    private static void deleteStudent(String id) {
+    public static void deleteStudent(String id) {
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "Password");
             Statement studentmanage = conn.createStatement();
@@ -45,7 +45,7 @@ public class SimpleStudentManagement {
         }
     }
 
-    private static void viewStudents() {
+    public static void viewStudents() {
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "Password");
             Statement studentmanage = conn.createStatement();
@@ -61,7 +61,7 @@ public class SimpleStudentManagement {
         }
     }
 
-    private static void searchStudent(String name) {
+    public static void searchStudent(String name) {
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "Password");
             Statement studentmanage = conn.createStatement();

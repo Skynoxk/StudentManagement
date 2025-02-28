@@ -8,10 +8,19 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 public class SimpleStudentManagement {
+
+	public static Connection connection() {
+		try {
+			return DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root","Password");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 	public static void addStudent(String id, String name, float grade, String major) {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "Password");
+            Connection conn = connection();
             Statement studentmanage = conn.createStatement();
             studentmanage.executeUpdate("INSERT INTO students (id, name, grade, major) VALUES ('" + id + "', '" + name + "', " + grade + ", '" + major + "')");
             studentmanage.close();
@@ -23,7 +32,7 @@ public class SimpleStudentManagement {
 
     public static void updateStudent(String id, String name, float grade, String major) {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "Password");
+        	Connection conn = connection();
             Statement studentmanage = conn.createStatement();
             studentmanage.executeUpdate("UPDATE students SET name='" + name + "', grade=" + grade + ", major='" + major + "' WHERE id='" + id + "'");
             studentmanage.close();
@@ -35,7 +44,7 @@ public class SimpleStudentManagement {
 
     public static void deleteStudent(String id) {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "Password");
+        	Connection conn = connection();
             Statement studentmanage = conn.createStatement();
             studentmanage.executeUpdate("DELETE FROM students WHERE id='" + id + "'");
             studentmanage.close();
@@ -47,7 +56,7 @@ public class SimpleStudentManagement {
 
     public static void viewStudents() {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "Password");
+        	Connection conn = connection();
             Statement studentmanage = conn.createStatement();
             ResultSet result = studentmanage.executeQuery("SELECT * FROM students ORDER BY name");
             while (result.next()) {
@@ -63,7 +72,7 @@ public class SimpleStudentManagement {
 
     public static void searchStudent(String name) {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "Password");
+        	Connection conn = connection();
             Statement studentmanage = conn.createStatement();
             ResultSet result = studentmanage.executeQuery("SELECT * FROM students WHERE name LIKE '%" + name + "%'");
             while (result.next()) {

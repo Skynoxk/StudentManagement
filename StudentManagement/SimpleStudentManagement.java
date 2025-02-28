@@ -94,7 +94,7 @@ public class SimpleStudentManagement {
             System.out.println("2. Update Student");
             System.out.println("3. Remove Student");
             System.out.println("4. View Students (Sorted by Name)");
-            System.out.println("5. Search Student");
+            System.out.println("5. Search Student (Search by Name");
             System.out.println("6. Exit");
             System.out.print("Choose an option: ");
             int choice = scanner.nextInt();

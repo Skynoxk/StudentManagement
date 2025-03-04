@@ -11,50 +11,84 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashMap;
 
 public class FXMLController {
     @FXML
     private TextField usernameLogin;
-    
     @FXML
     private PasswordField passwordLogin;
 
-    private final String DB_URL = "jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC";
-    private final String DB_USER = "";  
-    private final String DB_PASSWORD = ""; 
+    private final String DB_URL = "jdbc:mysql://localhost:3306/student";
+    private final String DB_USER = "lol";
+    private final String DB_PASSWORD = "lol";
+
+    private static final int MAX_ATTEMPTS = 5;
+    private static final long LOCK_TIME_MS = 60_000; // in milliseconds
+    
+    private static HashMap<String, Integer> loginAttempts = new HashMap<>();
+    private static HashMap<String, Long> lockTime = new HashMap<>();
 
     @FXML
     public void login(ActionEvent event) {
         String username = usernameLogin.getText();
         String password = passwordLogin.getText();
-        
+
         if (username.isEmpty() || password.isEmpty()) {
             showAlert("Error", "Username or Password cannot be empty!");
             return;
         }
 
+        // Check if the user is locked out
+        if (lockTime.containsKey(username)) {
+            long lockedTime = lockTime.get(username);
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lockedTime < LOCK_TIME_MS) {
+                showAlert("Error", "Too many failed attempts! Try again after 1 minute.");
+                return;
+            } else {
+                // Reset lock status after time is over
+                lockTime.remove(username);
+                loginAttempts.put(username, 0);
+            }
+        }
+
         String role = validateLogin(username, password);
+
         if (role == null) {
-            showAlert("Error", "Invalid Username or Password!");
-        } else if (role.equals("admin")) {
-            loadDashboard(event, "AdminDashboard.fxml");  
+            // Increase failed attempts
+            loginAttempts.put(username, loginAttempts.getOrDefault(username, 0) + 1);
+
+            // If max attempts reached, lock the user
+            if (loginAttempts.get(username) >= MAX_ATTEMPTS) {
+                lockTime.put(username, System.currentTimeMillis());
+                showAlert("Error", "Too many failed attempts! You are locked for 1 minute.");
+            } else {
+                showAlert("Error", "Invalid Username or Password! Attempts left: " + (MAX_ATTEMPTS - loginAttempts.get(username)));
+            }
         } else {
-            loadDashboard(event, "UserDashboard.fxml");
+            // Reset attempts on successful login
+            loginAttempts.remove(username);
+            lockTime.remove(username);
+
+            if (role.equals("admin")) {
+                loadDashboard(event, "AdminDashboard.fxml");
+            } else {
+                loadDashboard(event, "UserDashboard.fxml");
+            }
         }
     }
 
     private String validateLogin(String username, String password) {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");  // ✅ Load MySQL Driver
-            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-            String query = "SELECT role FROM users WHERE username=? AND password=?"; 
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String query = "SELECT role FROM students WHERE username=? AND password=?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, username);
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                return rs.getString("role");  // Return user role
+                return rs.getString("role");
             }
         } catch (Exception e) {
             e.printStackTrace();

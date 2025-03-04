@@ -28,7 +28,7 @@ CREATE TABLE `students` (
   `grade` float DEFAULT NULL,
   `major` varchar(100) DEFAULT NULL,
   `gender` varchar(10) DEFAULT NULL,
-  `birthday` varchar(10) DEFAULT NULL,
+  `birthdate` varchar(10) DEFAULT NULL,
   `address` varchar(200) DEFAULT NULL,
   `department` varchar(50) DEFAULT NULL,
   `role` varchar(10) DEFAULT NULL,
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-28  9:41:38
+-- Dump completed on 2025-03-04 13:57:44

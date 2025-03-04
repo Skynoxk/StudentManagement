@@ -20,8 +20,8 @@ public class FXMLController {
     private PasswordField passwordLogin;
 
     private final String DB_URL = "jdbc:mysql://localhost:3306/student?useSSL=false&serverTimezone=UTC";
-    private final String DB_USER = "root";  
-    private final String DB_PASSWORD = "admin123"; 
+    private final String DB_USER = "";  
+    private final String DB_PASSWORD = ""; 
 
     @FXML
     public void login(ActionEvent event) {

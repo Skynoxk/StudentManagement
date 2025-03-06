@@ -93,8 +93,14 @@ public class SimpleStudentManagement {
             while (result.next()) {
                 System.out.println(result.getString("id") 
                 		+ " | " + result.getString("name") 
+                		+ " | " + result.getString("username")
                 		+ " | " + result.getFloat("grade") 
-                		+ " | " + result.getString("major"));
+                		+ " | " + result.getString("major")
+                		+ " | " + result.getString("gender") 
+                		+ " | " + result.getString("birthdate") 
+                		+ " | " + result.getString("address")
+                		+ " | " + result.getString("department")
+                		);
             }
             result.close();
             studentmanage.close();

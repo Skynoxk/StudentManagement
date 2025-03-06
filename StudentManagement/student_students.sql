@@ -31,7 +31,7 @@ CREATE TABLE `students` (
   `birthdate` varchar(10) DEFAULT NULL,
   `address` varchar(200) DEFAULT NULL,
   `department` varchar(50) DEFAULT NULL,
-  `role` varchar(10) DEFAULT NULL,
+  `username` varchar(100) DEFAULT NULL,
   `password` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -43,7 +43,7 @@ CREATE TABLE `students` (
 
 LOCK TABLES `students` WRITE;
 /*!40000 ALTER TABLE `students` DISABLE KEYS */;
-INSERT INTO `students` VALUES ('P001','Veasna',75.44,'AIECS',NULL,NULL,NULL,NULL,NULL,NULL),('P002','Daly',74.78,'AIECS',NULL,NULL,NULL,NULL,NULL,NULL),('P004','Viphou',76.32,'AIECS',NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `students` VALUES ('P001','Veasna',75.44,'AIECS',NULL,NULL,NULL,NULL,NULL,NULL),('P002','Daly',72,'AIECS','F','03/01/2005','PP','IP','Dal','LbUpfw9BGl5+XNEJ0pk7Yw=='),('P004','Viphou',76.32,'AIECS',NULL,NULL,NULL,NULL,NULL,NULL),('P005','Soklang',77,'AIECS','F','03/03/2005','PP','IP','Lang','ICy5YqxZB1uWSwcVLSNLcA=='),('P006','Vontey',77.25,'AIECS','F','01/03/2005','PP','IP','Tey','kAFQmDzST7DWlj99KOF/cg=='),('P007','Theany',77,'AIECS','F','23/02/2005','PP','IP','Ny','123');
 /*!40000 ALTER TABLE `students` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-04 13:57:44
+-- Dump completed on 2025-03-06 16:09:26

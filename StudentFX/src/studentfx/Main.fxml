@@ -17,23 +17,29 @@
          <children>
             <AnchorPane layoutX="1.0" layoutY="1.0" prefHeight="400.0" prefWidth="601.0" stylesheets="@../fxml.css">
                <children>
-                  <ImageView fx:id="itclogo" fitHeight="223.0" fitWidth="282.0" layoutX="36.0" layoutY="89.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="415.0" fitWidth="269.0" layoutX="2.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../ce3b5ac194ea7fd2c62d6a1bce7df298.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="itclogo" fitHeight="231.0" fitWidth="191.0" layoutX="41.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../Logo-ITC.png" />
                      </image>
                   </ImageView>
+                  <Button layoutX="14.0" layoutY="362.0" mnemonicParsing="false" prefHeight="9.0" prefWidth="74.0" text="About US" />
                </children>
             </AnchorPane>
-            <AnchorPane layoutX="339.0" layoutY="-3.0" prefHeight="404.0" prefWidth="299.0" styleClass="gradient" stylesheets="@../fxml.css" AnchorPane.rightAnchor="0.0">
+            <AnchorPane layoutX="339.0" layoutY="1.0" prefHeight="400.0" prefWidth="330.0" styleClass="gradient" stylesheets="@../fxml.css" AnchorPane.rightAnchor="0.0">
                <children>
-                  <Label layoutX="37.0" layoutY="63.0" prefHeight="35.0" prefWidth="169.0" stylesheets="@../fxml.css" text="Login account" textFill="#452cb2">
+                  <Label layoutX="70.0" layoutY="70.0" prefHeight="51.0" prefWidth="191.0" stylesheets="@../fxml.css" text="Login account" textFill="#452cb2">
                      <font>
                         <Font size="25.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="usernameLogin" layoutX="39.0" layoutY="144.0" prefHeight="26.0" prefWidth="173.0" promptText="Email or Username" />
-                  <PasswordField fx:id="passwordLogin" layoutX="39.0" layoutY="200.0" prefHeight="26.0" prefWidth="173.0" promptText="Password" />
-                  <Button fx:id="loginBT" layoutX="163.0" layoutY="251.0" mnemonicParsing="false" onAction="#login" text="Login" />
+                  <TextField fx:id="usernameLogin" layoutX="67.0" layoutY="146.0" prefHeight="30.0" prefWidth="200.0" promptText="Email or Username" />
+                  <PasswordField fx:id="passwordLogin" layoutX="67.0" layoutY="200.0" prefHeight="30.0" prefWidth="200.0" promptText="Password" />
+                  <Button fx:id="loginBT" layoutX="143.0" layoutY="251.0" mnemonicParsing="false" onAction="#login" text="Login" />
                </children>
                <effect>
                   <Blend />

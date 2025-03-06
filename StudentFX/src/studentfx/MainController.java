@@ -17,11 +17,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.Duration;
+import javafx.animation.TranslateTransition;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 /**
@@ -30,6 +33,8 @@ import javafx.stage.Stage;
  * @author skynoxk
  */
 public class MainController implements Initializable {
+    @FXML
+    private ImageView itclogo;
 
     @FXML
     private TextField usernameLogin;
@@ -53,7 +58,12 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        // translate
+        TranslateTransition translate = new TranslateTransition();
+        translate.setNode(itclogo);
+        translate.setDuration(javafx.util.Duration.millis(800));
+        translate.setByY(25);
+        translate.play();
     }    
 
     @FXML

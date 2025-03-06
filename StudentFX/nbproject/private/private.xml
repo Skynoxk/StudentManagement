@@ -5,8 +5,7 @@
         <group>
             <file>file:/Users/skynoxk/NetBeansProjects/StudentFX/src/studentfx/MainFX.java</file>
             <file>file:/Users/skynoxk/NetBeansProjects/StudentFX/src/studentfx/AdminDashboardController.java</file>
-            <file>file:/Users/skynoxk/NetBeansProjects/StudentFX/src/studentfx/FXMLController.java</file>
-            <file>file:/Users/skynoxk/NetBeansProjects/StudentFX/src/studentfx/FXML.fxml</file>
+            <file>file:/Users/skynoxk/NetBeansProjects/StudentFX/src/studentfx/MainController.java</file>
             <file>file:/Users/skynoxk/NetBeansProjects/StudentFX/src/studentfx/Main.fxml</file>
         </group>
     </open-files>

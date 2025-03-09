@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="544.0" prefWidth="879.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="studentfx.MainController">
+   <children>
+      <!-- Background Grid Animation -->
+      <Canvas fx:id="gridCanvas" height="544" width="879" />
+      
+      <AnchorPane prefHeight="564.0" prefWidth="757.0">
+         <children>
+            <AnchorPane layoutX="1.0" layoutY="1.0" prefHeight="400.0" prefWidth="601.0" stylesheets="@../fxml.css">
+               <children>
+                  <ImageView fx:id="itclogo" fitHeight="343.0" fitWidth="324.0" layoutX="16.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Logo-ITC.png" />
+                     </image>
+                  </ImageView>
+                  <Button layoutX="15.0" layoutY="497.0" mnemonicParsing="false" prefHeight="9.0" prefWidth="74.0" style="-fx-background-radius: 25;" text="About US" />
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="339.0" layoutY="1.0" prefHeight="542.0" prefWidth="513.0" styleClass="gradient" stylesheets="@../fxml.css" AnchorPane.rightAnchor="0.0">
+               <children>
+                  <Label layoutX="110.0" layoutY="114.0" prefHeight="51.0" prefWidth="191.0" text="Login account" textFill="#452cb2">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="usernameLogin" layoutX="110.0" layoutY="200.0" prefHeight="45.0" prefWidth="300.0" promptText="Email or Username" style="-fx-background-radius: 30;" />
+                  <PasswordField fx:id="passwordLogin" layoutX="110.0" layoutY="293.0" prefHeight="45.0" prefWidth="300.0" promptText="Password" style="-fx-background-radius: 30;" />
+                  <Button fx:id="loginBT" layoutX="213.0" layoutY="374.0" mnemonicParsing="false" onAction="#login" prefHeight="37.0" prefWidth="102.0" style="-fx-background-radius: 25;" text="Login" />
+               </children>
+               <effect>
+                  <Blend />
+               </effect>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>

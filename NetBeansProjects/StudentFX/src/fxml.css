@@ -1,0 +1,53 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.gradient {
+    -fx-background-color: linear-gradient(to bottom right, #3cdbff,#b4a3ff);
+}
+#createAccLabel{
+    -fx-alignment: CENTER;
+}
+/* Background Gradient */
+.gradient {
+    -fx-background-color: linear-gradient(to right, #6a11cb, #2575fc);
+}
+
+/* Login Label */
+.label {
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+
+/* TextField & PasswordField */
+.text-field, .password-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #6a11cb;
+    -fx-border-radius: 30;
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+}
+
+/* Login Button */
+#loginBT {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #6a11cb;
+    -fx-font-weight: bold;
+    -fx-border-radius: 25;
+    -fx-cursor: hand;
+}
+
+/* Hover Effect */
+#loginBT:hover {
+    -fx-background-color: #2575fc;
+    -fx-text-fill: #ffffff;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+    -fx-transition: 0.3s;
+}
+
+/* Animated Background */
+.animated-background {
+    -fx-background-color: linear-gradient(to right, #ff758c, #ff7eb3);
+    -fx-transition: background-color 0.5s ease-in-out;
+}

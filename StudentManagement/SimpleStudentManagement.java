@@ -9,218 +9,247 @@ import java.util.Scanner;
 
 public class SimpleStudentManagement {
 
-	public static Connection connection() {
-		try {
-			return DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root","password");
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	//Add students function (Passwords will be hashed when input)
-	public static void addStudent(String id, String name, String major, String gender, 
-			String birthdate, String address, String department, String username, String password) {
-        try {
-            Connection conn = connection();
-            Statement studentmanage = conn.createStatement();
-            String hashedPassword = PasswordMD5.hashPassword(password);
-            studentmanage.executeUpdate("INSERT INTO students (id, name, major, gender, "
-            		+ "birthdate, address, department, username, password) "
-                    + "VALUES ('" + id + "', '" + name + "', '" + major + "', '" 
-            		+ gender + "', '" + birthdate + "', '" + address + "', '" 
-                    + department + "', '" + username + "', '" + hashedPassword + "')");
-            studentmanage.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+	    public static Connection connection() {
+	        try {
+	            return DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root","Daly030105@");
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            return null;
+	        }
+	    }
 
-	//Add course and point the calculated average grade from course_grades to grade in students table
-	//course_grades table and students table is in the same database called student
-    public static void addCourseGrade(String id, String courseName, float courseGrade) {
-        try {
-            Connection conn = connection();
-            Statement studentmanage = conn.createStatement();
-            studentmanage.executeUpdate("INSERT INTO course_grades (id, course_name, course_grade) "
-            		+ "VALUES ('" + id + "', '" + courseName + "', " + courseGrade + ")");
+	    // Add students function (Passwords will be hashed when input)
+	    public static void addStudent(String id, String name, String major, String gender, 
+	            String birthdate, String address, String department, String username, String password) {
+	        try {
+	            Connection conn = connection();
+	            Statement studentmanage = conn.createStatement();
 
-            float newAverage = calculateAverageGrade(id);
-            studentmanage.executeUpdate("UPDATE students SET grade = " + newAverage + " WHERE id = '" + id + "'");
+	            // Check if the fields are empty and handle NULL values
+	            id = id.isEmpty() ? "NULL" : "'" + id + "'";
+	            name = name.isEmpty() ? "NULL" : "'" + name + "'";
+	            major = major.isEmpty() ? "NULL" : "'" + major + "'";
+	            gender = gender.isEmpty() ? "NULL" : "'" + gender + "'";
+	            birthdate = birthdate.isEmpty() ? "NULL" : "'" + birthdate + "'";
+	            address = address.isEmpty() ? "NULL" : "'" + address + "'";
+	            department = department.isEmpty() ? "NULL" : "'" + department + "'";
+	            username = username.isEmpty() ? "NULL" : "'" + username + "'";
+	            password = password.isEmpty() ? "NULL" : "'" + PasswordMD5.hashPassword(password) + "'";
 
-            studentmanage.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    //Delete course based on ID input and recalculate the new grades
-    public static void deleteCourseGrade(String id, String courseName) {
-        try {
-            Connection conn = connection();
-            Statement studentmanage = conn.createStatement();
-            
-            // Delete the course grade
-            studentmanage.executeUpdate("DELETE FROM course_grades WHERE id='" + id 
-            		+ "' AND course_name='" + courseName + "'");
+	            String query = "INSERT INTO students (id, name, major, gender, birthdate, address, department, username, password) "
+	                    + "VALUES (" + id + ", " + name + ", " + major + ", " + gender + ", " + birthdate + ", "
+	                    + address + ", " + department + ", " + username + ", " + password + ")";
+	            
+	            studentmanage.executeUpdate(query);
+	            studentmanage.close();
+	            conn.close();
+	            System.out.println("Add successfully");
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
 
-            // Recalculate the new average grade after deletion
-            float newAverage = calculateAverageGrade(id);
-            studentmanage.executeUpdate("UPDATE students SET grade = " + newAverage + " WHERE id = '" + id + "'");
+	    // Add course and point the calculated average grade from course_grades to grade in students table
+	    // course_grades table and students table is in the same database called student
+	    public static void addCourseGrade(String id, String courseName, float courseGrade) {
+	        try {
+	            Connection conn = connection();
+	            Statement studentmanage = conn.createStatement();
 
-            studentmanage.close();
-            conn.close();
-            System.out.println("Course grade deleted successfully.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+	            id = id.isEmpty() ? "NULL" : "'" + id + "'";
+	            courseName = courseName.isEmpty() ? "NULL" : "'" + courseName + "'";
 
-    //Update everything including password. Password is still hashed after input
-    public static void updateStudent(String id, String name, String major, String gender, 
-    		String birthdate, String address, String department, String username, String password) {
-        try {
-            Connection conn = connection();
-            Statement studentmanage = conn.createStatement();
-            String hashedPassword = PasswordMD5.hashPassword(password);
-            studentmanage.executeUpdate("UPDATE students SET name='" + name + "', major='" 
-            + major + "', gender='" + gender + "', birthdate='" + birthdate + "', address='" 
-            		+ address + "', department='" + department + "', username='" + username 
-            		+ "', password='" + hashedPassword + "' WHERE id='" + id + "'");
-            studentmanage.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+	            if (courseGrade < 0 || courseGrade > 100) {
+	                courseGrade = 0;
+	            }
+	            
+	            String query = "INSERT INTO course_grades (id, course_name, course_grade) "
+	                    + "VALUES (" + id + ", " + courseName + ", " + courseGrade + ")";
+	            
+	            studentmanage.executeUpdate(query);
 
-    //Delete everything about the student even including course grades
-    //Have to delete course grades first before you can delete students table due to primary key constraint
-    public static void deleteStudent(String id) {
-        try {
-            Connection conn = connection();
-            Statement studentmanage = conn.createStatement();
-            
-            // First, delete related course grades
-            studentmanage.executeUpdate("DELETE FROM course_grades WHERE id='" + id + "'");
-            
-            // Now, delete the student
-            studentmanage.executeUpdate("DELETE FROM students WHERE id='" + id + "'");
-            
-            studentmanage.close();
-            conn.close();
-            System.out.println("Student deleted successfully.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+	            float newAverage = calculateAverageGrade(id);
+	            studentmanage.executeUpdate("UPDATE students SET grade = " + newAverage + " WHERE id = '" + id + "'");
 
-    //View everything except passwords
-    public static void viewStudents() {
-        try {
-            Connection conn = connection();
-            Statement studentmanage = conn.createStatement();
-            ResultSet result = studentmanage.executeQuery("SELECT * FROM students ORDER BY name");
-            while (result.next()) {
-                System.out.println(result.getString("id") + " | " + result.getString("name") 
-                + " | " + result.getString("username") + " | " + result.getString("grade") 
-                + " | " + result.getString("major") + " | " + result.getString("gender") 
-                + " | " + result.getString("birthdate") + " | " + result.getString("address") 
-                + " | " + result.getString("department"));
-            }
-            result.close();
-            studentmanage.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    //view everything
-    public static void viewCourseGrades() {
-        try {
-            Connection conn = connection();
-            Statement studentmanage = conn.createStatement();
-            ResultSet result = studentmanage.executeQuery("SELECT * FROM course_grades ORDER BY id, course_name");
+	            studentmanage.close();
+	            conn.close();
+	            System.out.println("Add successfully");
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
 
-            while (result.next()) {
-                System.out.println(result.getString("id") + " | " + result.getString("course_name") 
-                    + " | " + result.getFloat("course_grade"));
-            }
+	    // Delete course based on ID input and recalculate the new grades
+	    public static void deleteCourseGrade(String id, String courseName) {
+	        try {
+	            Connection conn = connection();
+	            Statement studentmanage = conn.createStatement();
 
-            result.close();
-            studentmanage.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+	            // Delete the course grade
+	            studentmanage.executeUpdate("DELETE FROM course_grades WHERE id='" + id 
+	                    + "' AND course_name='" + courseName + "'");
 
-    //Calculate the average of the scores
-    public static float calculateAverageGrade(String id) {
-        float averageGrade = 0;
-        try {
-            Connection conn = connection();
-            Statement studentmanage = conn.createStatement();
-            ResultSet result = studentmanage.executeQuery("SELECT AVG(course_grade) "
-            		+ "AS avg_grade FROM course_grades WHERE id='" + id + "'");
-            if (result.next()) {
-                averageGrade = result.getFloat("avg_grade");
-            }
-            result.close();
-            studentmanage.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return averageGrade;
-    }
+	            // Recalculate the new average grade after deletion
+	            float newAverage = calculateAverageGrade(id);
+	            studentmanage.executeUpdate("UPDATE students SET grade = " + newAverage + " WHERE id = '" + id + "'");
 
-    //search student using name
-    public static void searchStudent(String name) {
-        try {
-            Connection conn = connection();
-            Statement studentmanage = conn.createStatement();
-            ResultSet result = studentmanage.executeQuery("SELECT * FROM students WHERE name LIKE '%" + name + "%'");
-            while (result.next()) {
-                System.out.println(result.getString("id") + " | " + result.getString("name") 
-                + " | " + result.getString("username") + " | " + result.getString("grade") 
-                + " | " + result.getString("major") + " | " + result.getString("gender") 
-                + " | " + result.getString("birthdate") + " | " + result.getString("address") 
-                + " | " + result.getString("department"));
-            }
-            result.close();
-            studentmanage.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    //search course grade of the student. 
-    //A bit of a bug: 
-    //For example if you have course called Java programming and Java Design then if you input Java then both appear
-    public static void searchCourseGrade(String courseName) {
-        try {
-            Connection conn = connection();
-            Statement studentmanage = conn.createStatement();
-            ResultSet result = studentmanage.executeQuery("SELECT * FROM course_grades WHERE course_name LIKE '%" 
-                + courseName + "%'");
-            
-            while (result.next()) {
-                System.out.println(result.getString("id") + " | " + result.getString("course_name") 
-                    + " | " + result.getFloat("course_grade"));
-            }
-            
-            result.close();
-            studentmanage.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+	            studentmanage.close();
+	            conn.close();
+	            System.out.println("Course grade deleted successfully.");
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    // Update everything including password. Password is still hashed after input
+	    public static void updateStudent(String id, String name, String major, String gender, 
+	            String birthdate, String address, String department, String username, String password) {
+	        try {
+	            Connection conn = connection();
+	            Statement studentmanage = conn.createStatement();
+
+	            name = name.isEmpty() ? "NULL" : "'" + name + "'";
+	            major = major.isEmpty() ? "NULL" : "'" + major + "'";
+	            gender = gender.isEmpty() ? "NULL" : "'" + gender + "'";
+	            birthdate = birthdate.isEmpty() ? "NULL" : "'" + birthdate + "'";
+	            address = address.isEmpty() ? "NULL" : "'" + address + "'";
+	            department = department.isEmpty() ? "NULL" : "'" + department + "'";
+	            username = username.isEmpty() ? "NULL" : "'" + username + "'";
+	            password = password.isEmpty() ? "NULL" : "'" + PasswordMD5.hashPassword(password) + "'";
+
+	            String query = "UPDATE students SET name=" + name + ", major=" + major + ", gender=" + gender 
+	                    + ", birthdate=" + birthdate + ", address=" + address + ", department=" + department 
+	                    + ", username=" + username + ", password=" + password + " WHERE id=" + "'" + id + "'";
+	            
+	            studentmanage.executeUpdate(query);
+	            studentmanage.close();
+	            conn.close();
+	            System.out.println("Update successfully");
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    // Delete everything about the student even including course grades
+	    // Have to delete course grades first before you can delete students table due to primary key constraint
+	    public static void deleteStudent(String id) {
+	        try {
+	            Connection conn = connection();
+	            Statement studentmanage = conn.createStatement();
+
+	            // First, delete related course grades
+	            studentmanage.executeUpdate("DELETE FROM course_grades WHERE id='" + id + "'");
+
+	            // Now, delete the student
+	            studentmanage.executeUpdate("DELETE FROM students WHERE id='" + id + "'");
+
+	            studentmanage.close();
+	            conn.close();
+	            System.out.println("Student deleted successfully.");
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    // View everything except passwords
+	    public static void viewStudents() {
+	        try {
+	            Connection conn = connection();
+	            Statement studentmanage = conn.createStatement();
+	            ResultSet result = studentmanage.executeQuery("SELECT * FROM students ORDER BY name");
+	            while (result.next()) {
+	                System.out.println(result.getString("id") + " | " + result.getString("name") 
+	                        + " | " + result.getString("username") + " | " + result.getString("grade") 
+	                        + " | " + result.getString("major") + " | " + result.getString("gender") 
+	                        + " | " + result.getString("birthdate") + " | " + result.getString("address") 
+	                        + " | " + result.getString("department"));
+	            }
+	            result.close();
+	            studentmanage.close();
+	            conn.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    // View everything
+	    public static void viewCourseGrades() {
+	        try {
+	            Connection conn = connection();
+	            Statement studentmanage = conn.createStatement();
+	            ResultSet result = studentmanage.executeQuery("SELECT * FROM course_grades ORDER BY id, course_name");
+
+	            while (result.next()) {
+	                System.out.println(result.getString("id") + " | " + result.getString("course_name") 
+	                        + " | " + result.getFloat("course_grade"));
+	            }
+
+	            result.close();
+	            studentmanage.close();
+	            conn.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    // Calculate the average of the scores
+	    public static float calculateAverageGrade(String id) {
+	        float averageGrade = 0;
+	        try {
+	            Connection conn = connection();
+	            Statement studentmanage = conn.createStatement();
+	            ResultSet result = studentmanage.executeQuery("SELECT AVG(course_grade) "
+	                    + "AS avg_grade FROM course_grades WHERE id='" + id + "'");
+	            if (result.next()) {
+	                averageGrade = result.getFloat("avg_grade");
+	            }
+	            result.close();
+	            studentmanage.close();
+	            conn.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        return averageGrade;
+	    }
+
+	    // Search student using name
+	    public static void searchStudent(String name) {
+	        try {
+	            Connection conn = connection();
+	            Statement studentmanage = conn.createStatement();
+	            ResultSet result = studentmanage.executeQuery("SELECT * FROM students WHERE name LIKE '%" + name + "%'");
+	            while (result.next()) {
+	                System.out.println(result.getString("id") + " | " + result.getString("name") 
+	                        + " | " + result.getString("username") + " | " + result.getString("grade") 
+	                        + " | " + result.getString("major") + " | " + result.getString("gender") 
+	                        + " | " + result.getString("birthdate") + " | " + result.getString("address") 
+	                        + " | " + result.getString("department"));
+	            }
+	            result.close();
+	            studentmanage.close();
+	            conn.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    // Search course grade of the student
+	    public static void searchCourseGrade(String courseName) {
+	        try {
+	            Connection conn = connection();
+	            Statement studentmanage = conn.createStatement();
+	            ResultSet result = studentmanage.executeQuery("SELECT * FROM course_grades WHERE course_name LIKE '%" + courseName + "%'");
+	            while (result.next()) {
+	                System.out.println(result.getString("id") + " | " + result.getString("course_name") 
+	                        + " | " + result.getFloat("course_grade"));
+	            }
+	            result.close();
+	            studentmanage.close();
+	            conn.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -331,3 +360,4 @@ public class SimpleStudentManagement {
         }
     }
 }
+

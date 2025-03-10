@@ -1,0 +1,5 @@
+/* Hover effect */
+.button:hover {
+   -fx-background-color: #3B4D66;
+   -fx-cursor: hand;
+}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/21.0.6" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="application.MainController" 
+            prefHeight="600" prefWidth="1000">
+    
+    <!-- Background Image -->
+    <ImageView fx:id="backgroundImage" fitHeight="600" fitWidth="1000">
+        <image>
+            <Image url="@/images/School_Background_Framework.jpg" />
+        </image>
+    </ImageView>
+    
+    <Pane layoutX="310" layoutY="70" prefHeight="338" prefWidth="357" style="-fx-background-color: rgba(255, 255, 255, 0.8); -fx-border-color: gray; -fx-border-width: 1;">
+
+        <!-- Logo Image -->
+        <ImageView fx:id="logoImageView" fitHeight="70" fitWidth="102" layoutX="130" layoutY="30">
+            <image>
+                <Image url="@/images/Logo-ITC.png" />
+            </image>
+        </ImageView>
+
+        <!-- Input Fields -->
+        <TextField fx:id="username" alignment="CENTER" layoutX="27" layoutY="130" prefWidth="301" promptText="Username" />
+        <PasswordField fx:id="pwdPassword" alignment="CENTER" layoutX="27" layoutY="182" prefWidth="301" promptText="Password" />
+
+        <!-- Login Button -->
+        <Button fx:id="btnLogin" layoutX="27" layoutY="246" onAction="#handleLogin" prefWidth="301" text="Login" />
+      <Separator layoutX="14.0" layoutY="225.0" prefHeight="0.0" prefWidth="329.0" />
+    </Pane>
+    
+</AnchorPane>

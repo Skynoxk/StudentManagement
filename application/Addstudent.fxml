@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="600" prefWidth="750" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.AddStudentController">
+   <children>
+      <Label layoutX="20.0" layoutY="42.0" style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-font-family: 'Arial Rounded MT Bold'" text="Add Student" />
+      
+      <Label layoutX="37.0" layoutY="309.0" text="Student ID:" />
+      <TextField fx:id="idField" layoutX="100.0" layoutY="305.0" prefWidth="200.0" />
+      
+      <Label layoutX="38.0" layoutY="358.0" text="Name:" />
+      <TextField fx:id="nameField" layoutX="100.0" layoutY="354.0" prefWidth="200.0" />
+      
+      <Label layoutX="37.0" layoutY="410.0" text="Username:" />
+      <TextField fx:id="usernameField" layoutX="480.0" layoutY="457.0" prefWidth="200.0" />
+      
+      <Label layoutX="38.0" layoutY="461.0" text="Password:" />
+      <TextField fx:id="passwordField" layoutX="480.0" layoutY="406.0" prefWidth="200.0" />
+      
+      <Label layoutX="39.0" layoutY="508.0" text="Major:" />
+      <TextField fx:id="majorField" layoutX="480.0" layoutY="305.0" prefWidth="200.0" />
+      
+      <Label layoutX="408.0" layoutY="309.0" text="Gender:" />
+      <TextField fx:id="genderField" layoutX="480.0" layoutY="354.0" prefWidth="200.0" />
+      
+      <Label layoutX="409.0" layoutY="358.0" text="Birthdate:" />
+      <TextField fx:id="birthdateField" layoutX="100.0" layoutY="406.0" prefWidth="200.0" />
+      
+      <Label layoutX="407.0" layoutY="410.0" text="Address:" />
+      <TextField fx:id="addressField" layoutX="100.0" layoutY="457.0" prefWidth="200.0" />
+      
+      <Label layoutX="407.0" layoutY="461.0" text="Department:" />
+      <TextField fx:id="departmentField" layoutX="100.0" layoutY="505.0" prefWidth="200.0" />
+      
+      <Button layoutX="407.0" layoutY="501.0" onAction="#addStudent" prefHeight="30.0" prefWidth="119.0" text="Add Student"
+              style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 14px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0, 2, 2);" />
+
+      <!-- Welcome Session -->
+      <AnchorPane layoutX="20.0" layoutY="95.0" prefHeight="182.0" prefWidth="678.0" style="-fx-background-color: #8897BD; -fx-background-radius: 10;">
+         <Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;" text="Welcome, Teacher!" />
+         <Label layoutX="20.0" layoutY="100.0" style="-fx-font-size: 12px; -fx-text-fill: white;" text="Manage students, courses, and grades from the sidebar." />
+      </AnchorPane>
+   </children>
+</AnchorPane>

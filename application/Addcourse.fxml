@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="600" prefWidth="1000" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.TeacherDashboardController">
+   <children>
+      <!-- Sidebar -->
+      <AnchorPane prefHeight="600" prefWidth="250" style="-fx-background-color: #2C3E50;">
+        <Label layoutX="130.0" layoutY="30.0" prefHeight="70.0" prefWidth="70.0" style="-fx-font-weight: bold; -fx-text-fill: white; -fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 40px" text="ITC" />
+
+        <Button layoutX="-15.0" layoutY="139.0" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-cursor: hand; -fx-background-hover-color: #FAEFED; -fx-effect: dropshadow(gaussian, black, 3, 0, 0, 2);" text="👥   Add Student" />
+        <Button layoutX="-18.0" layoutY="187.0" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-cursor: hand" text="✅   Add Course" />
+        <Button layoutX="-6.0" layoutY="272.0" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-cursor: hand" text="📝   Update Student" />
+        <Button layoutX="-1.0" layoutY="312.0" prefWidth="210.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-cursor: hand" text="❌   Remove Student" />
+    	<Button layoutX="-7.0" layoutY="355.0" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-cursor: hand" text="🗓   View Students" />
+    	<Button layoutX="11.0" layoutY="442.0" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-cursor: hand" text="📖   View Course Grades" />
+        <Button layoutX="20.0" layoutY="230.0" prefWidth="210.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-cursor: hand" text="📑   Remove Course Grade" />
+        <Button layoutX="-6.0" layoutY="399.0" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-cursor: hand" text="🔍   Search Student" />
+        <Button layoutX="17.0" layoutY="490.0" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-cursor: hand" text="📚   Search Course Grade" />
+
+        <Button layoutX="20.0" layoutY="558.0" onAction="#handleLogout" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: red; -fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 14px;" text="🚪 Logout" />
+        <ImageView fx:id="logoImageView" fitHeight="80.0" fitWidth="87.0" layoutX="30.0" layoutY="25.0">
+               <Image url="@../images/Logo-ITC.png" />
+        </ImageView>
+         
+      </AnchorPane>
+      
+      <!-- Main Content Area -->
+      <AnchorPane fx:id="addStudent" layoutX="250" layoutY="0" prefHeight="600" prefWidth="750" style="-fx-background-color: white;">
+         <!-- Content changes dynamically here -->
+         
+         <!-- Add Student -->
+		 <AnchorPane fx:id="addStudent" layoutX="14.0" prefHeight="600" prefWidth="750" style="-fx-background-color: white;">
+		    <Label layoutX="20.0" layoutY="42.0" style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-font-family: 'Arial Rounded MT Bold'" text="Add Student" />
+		    
+		    <Label layoutX="37.0" layoutY="309.0" text="Student ID:" />
+		    <TextField fx:id="idField" layoutX="100.0" layoutY="305.0" prefWidth="200.0" />
+		    
+		    <Label layoutX="38.0" layoutY="358.0" text="Name:" />
+		    <TextField fx:id="nameField" layoutX="100.0" layoutY="354.0" prefWidth="200.0" />
+		    
+		    <Label layoutX="37.0" layoutY="410.0" text="Username:" />
+		    <TextField fx:id="usernameField" layoutX="480.0" layoutY="457.0" prefWidth="200.0" />
+		    
+		    <Label layoutX="38.0" layoutY="461.0" text="Password:" />
+		    <TextField fx:id="passwordField" layoutX="480.0" layoutY="406.0" prefWidth="200.0" />
+		    
+		    <Label layoutX="39.0" layoutY="508.0" text="Major:" />
+		    <TextField fx:id="majorField" layoutX="480.0" layoutY="305.0" prefWidth="200.0" />
+		    
+		    <Label layoutX="408.0" layoutY="309.0" text="Gender:" />
+		    <TextField fx:id="genderField" layoutX="480.0" layoutY="354.0" prefWidth="200.0" />
+		    
+		    <Label layoutX="409.0" layoutY="358.0" text="Birthdate:" />
+		    <TextField fx:id="birthdateField" layoutX="100.0" layoutY="406.0" prefWidth="200.0" />
+		    
+		    <Label layoutX="407.0" layoutY="410.0" text="Address:" />
+		    <TextField fx:id="addressField" layoutX="100.0" layoutY="457.0" prefWidth="200.0" />
+		    
+		    <Label layoutX="407.0" layoutY="461.0" text="Department:" />
+		    <TextField fx:id="departmentField" layoutX="100.0" layoutY="505.0" prefWidth="200.0" />
+		    
+		    <Button layoutX="407.0" layoutY="501.0" onAction="#addStudent" prefHeight="30.0" prefWidth="119.0" text="Add Student" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 14px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0, 2, 2);"/>
+		    
+		    <!-- Welcome Session -->
+            <AnchorPane layoutX="20.0" layoutY="95.0" prefHeight="182.0" prefWidth="678.0" style="-fx-background-color: #8897BD; -fx-background-radius: 10;">
+            	<Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;" text="Welcome, Teacher!" />
+            	<Label layoutX="20.0" layoutY="100.0" style="-fx-font-size: 12px; -fx-text-fill: white;" text="Manage students, courses, and grades from the sidebar." />
+            </AnchorPane>
+		 </AnchorPane>
+      </AnchorPane>
+   </children>
+</AnchorPane>

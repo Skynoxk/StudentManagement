@@ -20,31 +20,33 @@ public class SimpleStudentManagement {
 
     // Add students function (Passwords will be hashed when input)
     public static void addStudent(String id, String name, String major, String gender,
-                                  String birthdate, String address, String department,
-                                  String username, String password) {
-        String query = "INSERT INTO students (id, name, major, gender, birthdate, address, department, username, password) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            					String birthdate, String address, String department,
+            					String username, String password, String role) {
+    		String query = "INSERT INTO students (id, name, major, gender, birthdate, address, department, username, password, role) " +
+    						"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = connection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+    		try (Connection conn = connection();
+    				PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-            pstmt.setString(1, id.isEmpty() ? null : id);
-            pstmt.setString(2, name.isEmpty() ? null : name);
-            pstmt.setString(3, major.isEmpty() ? null : major);
-            pstmt.setString(4, gender.isEmpty() ? null : gender);
-            pstmt.setString(5, birthdate.isEmpty() ? null : birthdate);
-            pstmt.setString(6, address.isEmpty() ? null : address);
-            pstmt.setString(7, department.isEmpty() ? null : department);
-            pstmt.setString(8, username.isEmpty() ? null : username);
-            pstmt.setString(9, password.isEmpty() ? null : PasswordMD5.hashPassword(password));
+    			pstmt.setString(1, id.isEmpty() ? null : id);
+    			pstmt.setString(2, name.isEmpty() ? null : name);
+    			pstmt.setString(3, major.isEmpty() ? null : major);
+    			pstmt.setString(4, gender.isEmpty() ? null : gender);
+    			pstmt.setString(5, birthdate.isEmpty() ? null : birthdate);
+    			pstmt.setString(6, address.isEmpty() ? null : address);
+    			pstmt.setString(7, department.isEmpty() ? null : department);
+    			pstmt.setString(8, username.isEmpty() ? null : username);
+    			pstmt.setString(9, password.isEmpty() ? null : PasswordMD5.hashPassword(password));
+    			pstmt.setString(10, role.isEmpty() ? "user" : role);  // Default role is "user"
 
-            pstmt.executeUpdate();
-            System.out.println("Added successfully");
+    			pstmt.executeUpdate();
+    			System.out.println("Added " + role + " successfully ");
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    		} catch (SQLException e) {
+    			e.printStackTrace();
+    		}
     }
+
 
     // Add course and point the calculated average grade from course_grades to grade in students table
     // course_grades table and students table is in the same database called student
@@ -341,7 +343,9 @@ public class SimpleStudentManagement {
                     String username = scanner.nextLine();
                     System.out.print("Password: ");
                     String password = scanner.nextLine();
-                    addStudent(id, name, major, gender, birthdate, address, department, username, password);
+                    System.out.print("Role (admin/user): ");
+                    String role = scanner.nextLine();
+                    addStudent(id, name, major, gender, birthdate, address, department, username, password, role);
                     break;
 
                 case 2:

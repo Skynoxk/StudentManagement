@@ -2,254 +2,303 @@ package StudentManagement;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Scanner;
 
 public class SimpleStudentManagement {
 
-	    public static Connection connection() {
-	        try {
-	            return DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root","Daly030105@");
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	            return null;
-	        }
-	    }
+    public static Connection connection() {
+        try {
+            return DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "Daly030105@");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-	    // Add students function (Passwords will be hashed when input)
-	    public static void addStudent(String id, String name, String major, String gender, 
-	            String birthdate, String address, String department, String username, String password) {
-	        try {
-	            Connection conn = connection();
-	            Statement studentmanage = conn.createStatement();
+    // Add students function (Passwords will be hashed when input)
+    public static void addStudent(String id, String name, String major, String gender,
+                                  String birthdate, String address, String department,
+                                  String username, String password) {
+        String query = "INSERT INTO students (id, name, major, gender, birthdate, address, department, username, password) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-	            // Check if the fields are empty and handle NULL values
-	            id = id.isEmpty() ? "NULL" : "'" + id + "'";
-	            name = name.isEmpty() ? "NULL" : "'" + name + "'";
-	            major = major.isEmpty() ? "NULL" : "'" + major + "'";
-	            gender = gender.isEmpty() ? "NULL" : "'" + gender + "'";
-	            birthdate = birthdate.isEmpty() ? "NULL" : "'" + birthdate + "'";
-	            address = address.isEmpty() ? "NULL" : "'" + address + "'";
-	            department = department.isEmpty() ? "NULL" : "'" + department + "'";
-	            username = username.isEmpty() ? "NULL" : "'" + username + "'";
-	            password = password.isEmpty() ? "NULL" : "'" + PasswordMD5.hashPassword(password) + "'";
+        try (Connection conn = connection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-	            String query = "INSERT INTO students (id, name, major, gender, birthdate, address, department, username, password) "
-	                    + "VALUES (" + id + ", " + name + ", " + major + ", " + gender + ", " + birthdate + ", "
-	                    + address + ", " + department + ", " + username + ", " + password + ")";
-	            
-	            studentmanage.executeUpdate(query);
-	            studentmanage.close();
-	            conn.close();
-	            System.out.println("Add successfully");
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
+            pstmt.setString(1, id.isEmpty() ? null : id);
+            pstmt.setString(2, name.isEmpty() ? null : name);
+            pstmt.setString(3, major.isEmpty() ? null : major);
+            pstmt.setString(4, gender.isEmpty() ? null : gender);
+            pstmt.setString(5, birthdate.isEmpty() ? null : birthdate);
+            pstmt.setString(6, address.isEmpty() ? null : address);
+            pstmt.setString(7, department.isEmpty() ? null : department);
+            pstmt.setString(8, username.isEmpty() ? null : username);
+            pstmt.setString(9, password.isEmpty() ? null : PasswordMD5.hashPassword(password));
 
-	    // Add course and point the calculated average grade from course_grades to grade in students table
-	    // course_grades table and students table is in the same database called student
-	    public static void addCourseGrade(String id, String courseName, float courseGrade) {
-	        try {
-	            Connection conn = connection();
-	            Statement studentmanage = conn.createStatement();
+            pstmt.executeUpdate();
+            System.out.println("Added successfully");
 
-	            id = id.isEmpty() ? "NULL" : "'" + id + "'";
-	            courseName = courseName.isEmpty() ? "NULL" : "'" + courseName + "'";
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-	            if (courseGrade < 0 || courseGrade > 100) {
-	                courseGrade = 0;
-	            }
-	            
-	            String query = "INSERT INTO course_grades (id, course_name, course_grade) "
-	                    + "VALUES (" + id + ", " + courseName + ", " + courseGrade + ")";
-	            
-	            studentmanage.executeUpdate(query);
+    // Add course and point the calculated average grade from course_grades to grade in students table
+    // course_grades table and students table is in the same database called student
+    public static void addCourseGrade(String id, String courseName, float courseGrade) {
+        String insertQuery = "INSERT INTO course_grades (id, course_name, course_grade) VALUES (?, ?, ?)";
+        String updateQuery = "UPDATE students SET grade = ? WHERE id = ?";
 
-	            float newAverage = calculateAverageGrade(id);
-	            studentmanage.executeUpdate("UPDATE students SET grade = " + newAverage + " WHERE id = '" + id + "'");
+        try (Connection conn = connection();
+             PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
+             PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
 
-	            studentmanage.close();
-	            conn.close();
-	            System.out.println("Add successfully");
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
+            // Validate ID and course name
+            if (id.isEmpty() || courseName.isEmpty()) {
+                System.out.println("Error: ID and course name cannot be empty.");
+                return;
+            }
 
-	    // Delete course based on ID input and recalculate the new grades
-	    public static void deleteCourseGrade(String id, String courseName) {
-	        try {
-	            Connection conn = connection();
-	            Statement studentmanage = conn.createStatement();
+            // Ensure course grade is within range
+            if (courseGrade < 0 || courseGrade > 100) {
+                courseGrade = 0;
+            }
 
-	            // Delete the course grade
-	            studentmanage.executeUpdate("DELETE FROM course_grades WHERE id='" + id 
-	                    + "' AND course_name='" + courseName + "'");
+            // Insert into course_grades table
+            insertStmt.setString(1, id);
+            insertStmt.setString(2, courseName);
+            insertStmt.setFloat(3, courseGrade);
+            insertStmt.executeUpdate();
 
-	            // Recalculate the new average grade after deletion
-	            float newAverage = calculateAverageGrade(id);
-	            studentmanage.executeUpdate("UPDATE students SET grade = " + newAverage + " WHERE id = '" + id + "'");
+            // Recalculate the new average grade for the student
+            float newAverage = calculateAverageGrade(id);
 
-	            studentmanage.close();
-	            conn.close();
-	            System.out.println("Course grade deleted successfully.");
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
+            // Update the student's grade in students table
+            updateStmt.setFloat(1, newAverage);
+            updateStmt.setString(2, id);
+            updateStmt.executeUpdate();
 
-	    // Update everything including password. Password is still hashed after input
-	    public static void updateStudent(String id, String name, String major, String gender, 
-	            String birthdate, String address, String department, String username, String password) {
-	        try {
-	            Connection conn = connection();
-	            Statement studentmanage = conn.createStatement();
+            System.out.println("Course grade added successfully!");
 
-	            name = name.isEmpty() ? "NULL" : "'" + name + "'";
-	            major = major.isEmpty() ? "NULL" : "'" + major + "'";
-	            gender = gender.isEmpty() ? "NULL" : "'" + gender + "'";
-	            birthdate = birthdate.isEmpty() ? "NULL" : "'" + birthdate + "'";
-	            address = address.isEmpty() ? "NULL" : "'" + address + "'";
-	            department = department.isEmpty() ? "NULL" : "'" + department + "'";
-	            username = username.isEmpty() ? "NULL" : "'" + username + "'";
-	            password = password.isEmpty() ? "NULL" : "'" + PasswordMD5.hashPassword(password) + "'";
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-	            String query = "UPDATE students SET name=" + name + ", major=" + major + ", gender=" + gender 
-	                    + ", birthdate=" + birthdate + ", address=" + address + ", department=" + department 
-	                    + ", username=" + username + ", password=" + password + " WHERE id=" + "'" + id + "'";
-	            
-	            studentmanage.executeUpdate(query);
-	            studentmanage.close();
-	            conn.close();
-	            System.out.println("Update successfully");
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
+    // Delete course based on ID input and recalculate the new grades
+    public static void deleteCourseGrade(String id, String courseName) {
+        String deleteQuery = "DELETE FROM course_grades WHERE id = ? AND course_name = ?";
+        String updateQuery = "UPDATE students SET grade = ? WHERE id = ?";
 
-	    // Delete everything about the student even including course grades
-	    // Have to delete course grades first before you can delete students table due to primary key constraint
-	    public static void deleteStudent(String id) {
-	        try {
-	            Connection conn = connection();
-	            Statement studentmanage = conn.createStatement();
+        try (Connection conn = connection();
+             PreparedStatement deleteStmt = conn.prepareStatement(deleteQuery);
+             PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
 
-	            // First, delete related course grades
-	            studentmanage.executeUpdate("DELETE FROM course_grades WHERE id='" + id + "'");
+            // Validate ID and course name
+            if (id.isEmpty() || courseName.isEmpty()) {
+                System.out.println("Error: ID and course name cannot be empty.");
+                return;
+            }
 
-	            // Now, delete the student
-	            studentmanage.executeUpdate("DELETE FROM students WHERE id='" + id + "'");
+            // Delete the course grade
+            deleteStmt.setString(1, id);
+            deleteStmt.setString(2, courseName);
+            int rowsAffected = deleteStmt.executeUpdate();
 
-	            studentmanage.close();
-	            conn.close();
-	            System.out.println("Student deleted successfully.");
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
+            if (rowsAffected > 0) {
+                // Recalculate the new average grade after deletion
+                float newAverage = calculateAverageGrade(id);
 
-	    // View everything except passwords
-	    public static void viewStudents() {
-	        try {
-	            Connection conn = connection();
-	            Statement studentmanage = conn.createStatement();
-	            ResultSet result = studentmanage.executeQuery("SELECT * FROM students ORDER BY name");
-	            while (result.next()) {
-	                System.out.println(result.getString("id") + " | " + result.getString("name") 
-	                        + " | " + result.getString("username") + " | " + result.getString("grade") 
-	                        + " | " + result.getString("major") + " | " + result.getString("gender") 
-	                        + " | " + result.getString("birthdate") + " | " + result.getString("address") 
-	                        + " | " + result.getString("department"));
-	            }
-	            result.close();
-	            studentmanage.close();
-	            conn.close();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
+                // Update the student's grade in the students table
+                updateStmt.setFloat(1, newAverage);
+                updateStmt.setString(2, id);
+                updateStmt.executeUpdate();
 
-	    // View everything
-	    public static void viewCourseGrades() {
-	        try {
-	            Connection conn = connection();
-	            Statement studentmanage = conn.createStatement();
-	            ResultSet result = studentmanage.executeQuery("SELECT * FROM course_grades ORDER BY id, course_name");
+                System.out.println("Course grade deleted successfully.");
+            } else {
+                System.out.println("No matching course grade found to delete.");
+            }
 
-	            while (result.next()) {
-	                System.out.println(result.getString("id") + " | " + result.getString("course_name") 
-	                        + " | " + result.getFloat("course_grade"));
-	            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-	            result.close();
-	            studentmanage.close();
-	            conn.close();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
+    // Update everything including password. Password is still hashed after input
+    public static void updateStudent(String id, String name, String major, String gender,
+                                     String birthdate, String address, String department,
+                                     String username, String password) {
+        if (id == null || id.isEmpty()) {
+            System.out.println("Error: Student ID cannot be empty.");
+            return;
+        }
 
-	    // Calculate the average of the scores
-	    public static float calculateAverageGrade(String id) {
-	        float averageGrade = 0;
-	        try {
-	            Connection conn = connection();
-	            Statement studentmanage = conn.createStatement();
-	            ResultSet result = studentmanage.executeQuery("SELECT AVG(course_grade) "
-	                    + "AS avg_grade FROM course_grades WHERE id='" + id + "'");
-	            if (result.next()) {
-	                averageGrade = result.getFloat("avg_grade");
-	            }
-	            result.close();
-	            studentmanage.close();
-	            conn.close();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	        return averageGrade;
-	    }
+        String query = "UPDATE students SET name = ?, major = ?, gender = ?, birthdate = ?, "
+                + "address = ?, department = ?, username = ?, password = ? WHERE id = ?";
 
-	    // Search student using name
-	    public static void searchStudent(String name) {
-	        try {
-	            Connection conn = connection();
-	            Statement studentmanage = conn.createStatement();
-	            ResultSet result = studentmanage.executeQuery("SELECT * FROM students WHERE name LIKE '%" + name + "%'");
-	            while (result.next()) {
-	                System.out.println(result.getString("id") + " | " + result.getString("name") 
-	                        + " | " + result.getString("username") + " | " + result.getString("grade") 
-	                        + " | " + result.getString("major") + " | " + result.getString("gender") 
-	                        + " | " + result.getString("birthdate") + " | " + result.getString("address") 
-	                        + " | " + result.getString("department"));
-	            }
-	            result.close();
-	            studentmanage.close();
-	            conn.close();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
+        try (Connection conn = connection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-	    // Search course grade of the student
-	    public static void searchCourseGrade(String courseName) {
-	        try {
-	            Connection conn = connection();
-	            Statement studentmanage = conn.createStatement();
-	            ResultSet result = studentmanage.executeQuery("SELECT * FROM course_grades WHERE course_name LIKE '%" + courseName + "%'");
-	            while (result.next()) {
-	                System.out.println(result.getString("id") + " | " + result.getString("course_name") 
-	                        + " | " + result.getFloat("course_grade"));
-	            }
-	            result.close();
-	            studentmanage.close();
-	            conn.close();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
+            pstmt.setString(1, name.isEmpty() ? null : name);
+            pstmt.setString(2, major.isEmpty() ? null : major);
+            pstmt.setString(3, gender.isEmpty() ? null : gender);
+            pstmt.setString(4, birthdate.isEmpty() ? null : birthdate);
+            pstmt.setString(5, address.isEmpty() ? null : address);
+            pstmt.setString(6, department.isEmpty() ? null : department);
+            pstmt.setString(7, username.isEmpty() ? null : username);
+            pstmt.setString(8, password.isEmpty() ? null : PasswordMD5.hashPassword(password));
+            pstmt.setString(9, id);
+
+            int rowsUpdated = pstmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("Student updated successfully.");
+            } else {
+                System.out.println("No student found with the given ID.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Delete everything about the student even including course grades
+    public static void deleteStudent(String id) {
+        if (id == null || id.isEmpty()) {
+            System.out.println("Error: Student ID cannot be empty.");
+            return;
+        }
+
+        String deleteGradesQuery = "DELETE FROM course_grades WHERE id = ?";
+        String deleteStudentQuery = "DELETE FROM students WHERE id = ?";
+
+        try (Connection conn = connection();
+             PreparedStatement pstmtGrades = conn.prepareStatement(deleteGradesQuery);
+             PreparedStatement pstmtStudent = conn.prepareStatement(deleteStudentQuery)) {
+
+            // Delete related course grades first
+            pstmtGrades.setString(1, id);
+            pstmtGrades.executeUpdate();
+
+            // Delete student record
+            pstmtStudent.setString(1, id);
+            int rowsDeleted = pstmtStudent.executeUpdate();
+
+            if (rowsDeleted > 0) {
+                System.out.println("Student deleted successfully.");
+            } else {
+                System.out.println("No student found with the given ID.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // View everything except passwords
+    public static void viewStudents() {
+        String query = "SELECT * FROM students ORDER BY id";
+
+        try (Connection conn = connection();
+             PreparedStatement pstmt = conn.prepareStatement(query);
+             ResultSet result = pstmt.executeQuery()) {
+
+            while (result.next()) {
+                System.out.println(result.getString("id") + " | " + result.getString("name")
+                        + " | " + result.getString("username") + " | " + result.getString("grade")
+                        + " | " + result.getString("major") + " | " + result.getString("gender")
+                        + " | " + result.getString("birthdate") + " | " + result.getString("address")
+                        + " | " + result.getString("department"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // View everything
+    public static void viewCourseGrades() {
+        String query = "SELECT * FROM course_grades ORDER BY id";
+
+        try (Connection conn = connection();
+             PreparedStatement pstmt = conn.prepareStatement(query);
+             ResultSet result = pstmt.executeQuery()) {
+
+            while (result.next()) {
+                System.out.println(result.getString("id") + " | " + result.getString("course_name")
+                        + " | " + result.getFloat("course_grade"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Calculate the average of the scores
+    public static float calculateAverageGrade(String id) {
+        float averageGrade = 0;
+        String query = "SELECT AVG(course_grade) AS avg_grade FROM course_grades WHERE id = ?";
+
+        try (Connection conn = connection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, id);
+            try (ResultSet result = pstmt.executeQuery()) {
+                if (result.next()) {
+                    averageGrade = result.getFloat("avg_grade");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return averageGrade;
+    }
+
+    // Search student using name
+    public static void searchStudent(String name) {
+        String query = "SELECT * FROM students WHERE name LIKE ?";
+
+        try (Connection conn = connection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, "%" + name + "%");
+            try (ResultSet result = pstmt.executeQuery()) {
+                while (result.next()) {
+                    System.out.println(result.getString("id") + " | " + result.getString("name")
+                            + " | " + result.getString("username") + " | " + result.getString("grade")
+                            + " | " + result.getString("major") + " | " + result.getString("gender")
+                            + " | " + result.getString("birthdate") + " | " + result.getString("address")
+                            + " | " + result.getString("department"));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Search course grade of the student
+    public static void searchCourseGrade(String courseName) {
+        String query = "SELECT * FROM course_grades WHERE course_name LIKE ?";
+
+        try (Connection conn = connection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, "%" + courseName + "%");
+            try (ResultSet result = pstmt.executeQuery()) {
+                while (result.next()) {
+                    System.out.println(result.getString("id") + " | " + result.getString("course_name")
+                            + " | " + result.getFloat("course_grade"));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -259,105 +308,127 @@ public class SimpleStudentManagement {
             System.out.println("2. Add Course Grade");
             System.out.println("3. Remove Course Grade");
             System.out.println("4. Update Student");
-            System.out.println("5. Remove Student");
-            System.out.println("6. View Students (Sorted by Name)");
-            System.out.println("7. Search Student (Search by Name)");
-            System.out.println("8. View Course Grades (Sorted by Student ID)");
-            System.out.println("9. Search Course Grade (Search by Course Name)");
+            System.out.println("5. Delete Student");
+            System.out.println("6. View Students (Ascending order by ID)");
+            System.out.println("7. View Course Grades (Ascending order by ID)");
+            System.out.println("8. Search Student");
+            System.out.println("9. Search Course Grade");
             System.out.println("10. Exit");
-            System.out.print("Choose an option: ");
+
+            System.out.print("Select an option: ");
             int choice = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine();  // Consume the newline character
 
             switch (choice) {
                 case 1:
+                    // Add Student
+                    System.out.println("Enter student details:");
                     System.out.print("ID: ");
                     String id = scanner.nextLine();
                     System.out.print("Name: ");
                     String name = scanner.nextLine();
-                    System.out.print("Username: ");
-                    String username = scanner.nextLine();
-                    System.out.print("Password: ");
-                    String password = scanner.nextLine();
                     System.out.print("Major: ");
                     String major = scanner.nextLine();
                     System.out.print("Gender: ");
                     String gender = scanner.nextLine();
-                    System.out.print("Birth Date: ");
+                    System.out.print("Birthdate (YYYY-MM-DD): ");
                     String birthdate = scanner.nextLine();
                     System.out.print("Address: ");
                     String address = scanner.nextLine();
                     System.out.print("Department: ");
                     String department = scanner.nextLine();
+                    System.out.print("Username: ");
+                    String username = scanner.nextLine();
+                    System.out.print("Password: ");
+                    String password = scanner.nextLine();
                     addStudent(id, name, major, gender, birthdate, address, department, username, password);
                     break;
+
                 case 2:
-                    System.out.print("ID: ");
-                    id = scanner.nextLine();
-                    System.out.print("Course Name: ");
+                    // Add Course Grade
+                    System.out.print("Enter student ID: ");
+                    String studentId = scanner.nextLine();
+                    System.out.print("Enter course name: ");
                     String courseName = scanner.nextLine();
-                    System.out.print("Course Grade: ");
+                    System.out.print("Enter course grade: ");
                     float courseGrade = scanner.nextFloat();
-                    scanner.nextLine();
-                    addCourseGrade(id, courseName, courseGrade);
+                    scanner.nextLine();  // Consume the newline
+                    addCourseGrade(studentId, courseName, courseGrade);
                     break;
+
                 case 3:
-                    System.out.print("ID: ");
-                    id = scanner.nextLine();
-                    System.out.print("Course Name: ");
-                    courseName = scanner.nextLine();
-                    deleteCourseGrade(id, courseName);
+                    // Remove Course Grade
+                    System.out.print("Enter student ID: ");
+                    String removeId = scanner.nextLine();
+                    System.out.print("Enter course name to remove: ");
+                    String removeCourse = scanner.nextLine();
+                    deleteCourseGrade(removeId, removeCourse);
                     break;
+
                 case 4:
-                    System.out.print("ID to update: ");
-                    id = scanner.nextLine();
-                    System.out.print("New Name: ");
-                    name = scanner.nextLine();
-                    System.out.print("New Username: ");
-                    username = scanner.nextLine();
-                    System.out.print("New Password: ");
-                    password = scanner.nextLine();
-                    System.out.print("New Major: ");
-                    major = scanner.nextLine();
-                    System.out.print("New Gender: ");
-                    gender = scanner.nextLine();
-                    System.out.print("New Birth date: ");
-                    birthdate = scanner.nextLine();
-                    System.out.print("New Address: ");
-                    address = scanner.nextLine();
-                    System.out.print("New Department: ");
-                    department = scanner.nextLine();
-                    updateStudent(id, name, major, gender, birthdate, address, department, username, password);
+                    // Update Student
+                    System.out.print("Enter student ID to update: ");
+                    String updateId = scanner.nextLine();
+                    System.out.print("Enter new name (leave empty to skip): ");
+                    String updateName = scanner.nextLine();
+                    System.out.print("Enter new major (leave empty to skip): ");
+                    String updateMajor = scanner.nextLine();
+                    System.out.print("Enter new gender (leave empty to skip): ");
+                    String updateGender = scanner.nextLine();
+                    System.out.print("Enter new birthdate (leave empty to skip): ");
+                    String updateBirthdate = scanner.nextLine();
+                    System.out.print("Enter new address (leave empty to skip): ");
+                    String updateAddress = scanner.nextLine();
+                    System.out.print("Enter new department (leave empty to skip): ");
+                    String updateDepartment = scanner.nextLine();
+                    System.out.print("Enter new username (leave empty to skip): ");
+                    String updateUsername = scanner.nextLine();
+                    System.out.print("Enter new password (leave empty to skip): ");
+                    String updatePassword = scanner.nextLine();
+                    updateStudent(updateId, updateName, updateMajor, updateGender, updateBirthdate, updateAddress,
+                            updateDepartment, updateUsername, updatePassword);
                     break;
+
                 case 5:
-                    System.out.print("ID to delete: ");
-                    id = scanner.nextLine();
-                    deleteStudent(id);
+                    // Delete Student
+                    System.out.print("Enter student ID to delete: ");
+                    String deleteId = scanner.nextLine();
+                    deleteStudent(deleteId);
                     break;
+
                 case 6:
+                    // View Students
                     viewStudents();
                     break;
+
                 case 7:
-                    System.out.print("Search by Name: ");
-                    name = scanner.nextLine();
-                    searchStudent(name);
-                    break;
-                case 8:
+                    // View Course Grades
                     viewCourseGrades();
                     break;
-                case 9:
-                    System.out.print("Enter Course Name: ");
-                    courseName = scanner.nextLine();
-                    searchCourseGrade(courseName); 
+
+                case 8:
+                    // Search Student
+                    System.out.print("Enter student name to search: ");
+                    String searchName = scanner.nextLine();
+                    searchStudent(searchName);
                     break;
+
+                case 9:
+                    // Search Course Grade
+                    System.out.print("Enter course name to search: ");
+                    String searchCourse = scanner.nextLine();
+                    searchCourseGrade(searchCourse);
+                    break;
+
                 case 10:
                     System.out.println("Exiting...");
                     scanner.close();
                     return;
+
                 default:
-                    System.out.println("Invalid choice! Try again.");
+                    System.out.println("Invalid option, try again.");
+                    break;
             }
         }
     }
 }
-

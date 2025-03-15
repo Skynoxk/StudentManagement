@@ -1,11 +1,19 @@
 package StudentManagement;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class SimpleStudentManagement {
 
@@ -17,7 +25,7 @@ public class SimpleStudentManagement {
             return null;
         }
     }
-
+     
     // Add students function (Passwords will be hashed when input)
     public static void addStudent(String id, String name, String major, String gender,
             					String birthdate, String address, String department,
@@ -92,9 +100,10 @@ public class SimpleStudentManagement {
 
     // Delete course based on ID input and recalculate the new grades
     public static void deleteCourseGrade(String id, String courseName) {
+    	
         String deleteQuery = "DELETE FROM course_grades WHERE id = ? AND course_name = ?";
         String updateQuery = "UPDATE students SET grade = ? WHERE id = ?";
-
+        
         try (Connection conn = connection();
              PreparedStatement deleteStmt = conn.prepareStatement(deleteQuery);
              PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
@@ -167,9 +176,14 @@ public class SimpleStudentManagement {
     }
 
     // Delete everything about the student even including course grades
-    public static void deleteStudent(String id) {
-        if (id == null || id.isEmpty()) {
-            System.out.println("Error: Student ID cannot be empty.");
+    public static void deleteStudent(String id, Scanner scanner) {  // Pass Scanner as a parameter
+        searchStudent(id);  // Show student details before deletion
+
+        System.out.print("Are you sure you want to delete this student? (yes/no): ");
+        String confirm = scanner.nextLine();  // Use existing Scanner
+
+        if (!confirm.equalsIgnoreCase("yes")) {
+            System.out.println("Deletion canceled.");
             return;
         }
 
@@ -180,13 +194,11 @@ public class SimpleStudentManagement {
              PreparedStatement pstmtGrades = conn.prepareStatement(deleteGradesQuery);
              PreparedStatement pstmtStudent = conn.prepareStatement(deleteStudentQuery)) {
 
-            // Delete related course grades first
             pstmtGrades.setString(1, id);
-            pstmtGrades.executeUpdate();
+            pstmtGrades.executeUpdate();  // Delete associated course grades
 
-            // Delete student record
             pstmtStudent.setString(1, id);
-            int rowsDeleted = pstmtStudent.executeUpdate();
+            int rowsDeleted = pstmtStudent.executeUpdate(); // Delete student
 
             if (rowsDeleted > 0) {
                 System.out.println("Student deleted successfully.");
@@ -207,12 +219,23 @@ public class SimpleStudentManagement {
              PreparedStatement pstmt = conn.prepareStatement(query);
              ResultSet result = pstmt.executeQuery()) {
 
+            // Print header
+            System.out.printf("%-10s | %-20s | %-15s | %-5s | %-15s | %-8s | %-12s | %-25s | %-15s%n", 
+                              "ID", "Name", "Username", "Grade", "Major", "Gender", "Birthdate", "Phone address", "Department");
+            System.out.println("-----------------------------------------------------------------------------------------------------------");
+
+            // Print each row
             while (result.next()) {
-                System.out.println(result.getString("id") + " | " + result.getString("name")
-                        + " | " + result.getString("username") + " | " + result.getString("grade")
-                        + " | " + result.getString("major") + " | " + result.getString("gender")
-                        + " | " + result.getString("birthdate") + " | " + result.getString("address")
-                        + " | " + result.getString("department"));
+                System.out.printf("%-10s | %-20s | %-15s | %-5s | %-15s | %-8s | %-12s | %-25s | %-15s%n", 
+                                  result.getString("id"), 
+                                  result.getString("name"), 
+                                  result.getString("username"), 
+                                  result.getString("grade"), 
+                                  result.getString("major"), 
+                                  result.getString("gender"), 
+                                  result.getString("birthdate"), 
+                                  result.getString("address"), 
+                                  result.getString("department"));
             }
 
         } catch (SQLException e) {
@@ -228,9 +251,16 @@ public class SimpleStudentManagement {
              PreparedStatement pstmt = conn.prepareStatement(query);
              ResultSet result = pstmt.executeQuery()) {
 
+            // Print header
+            System.out.printf("%-10s | %-20s | %-10s%n", "ID", "Course Name", "Grade");
+            System.out.println("------------------------------------------------------");
+
+            // Print each row
             while (result.next()) {
-                System.out.println(result.getString("id") + " | " + result.getString("course_name")
-                        + " | " + result.getFloat("course_grade"));
+                System.out.printf("%-10s | %-20s | %-10.2f%n", 
+                                  result.getString("id"), 
+                                  result.getString("course_name"), 
+                                  result.getFloat("course_grade"));
             }
 
         } catch (SQLException e) {
@@ -260,20 +290,28 @@ public class SimpleStudentManagement {
     }
 
     // Search student using name
-    public static void searchStudent(String name) {
-        String query = "SELECT * FROM students WHERE name LIKE ?";
+    public static void searchStudent(String keyword) {
+        String query = "SELECT * FROM students WHERE id LIKE ? OR name LIKE ? OR major LIKE ? OR department LIKE ? OR address LIKE ? ORDER BY id";
 
         try (Connection conn = connection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-            pstmt.setString(1, "%" + name + "%");
+            for (int i = 1; i <= 5; i++) {
+                pstmt.setString(i, "%" + keyword + "%");
+            }
+
             try (ResultSet result = pstmt.executeQuery()) {
+                boolean found = false;
                 while (result.next()) {
+                    found = true;
                     System.out.println(result.getString("id") + " | " + result.getString("name")
                             + " | " + result.getString("username") + " | " + result.getString("grade")
                             + " | " + result.getString("major") + " | " + result.getString("gender")
                             + " | " + result.getString("birthdate") + " | " + result.getString("address")
                             + " | " + result.getString("department"));
+                }
+                if (!found) {
+                    System.out.println("No matching students found.");
                 }
             }
 
@@ -301,23 +339,254 @@ public class SimpleStudentManagement {
             e.printStackTrace();
         }
     }
+    
+    public static void summaryReport() {
+        String majorQuery = "SELECT major, COUNT(*) AS count FROM students GROUP BY major";
+        String genderQuery = "SELECT gender, COUNT(*) AS count FROM students GROUP BY gender";
 
+        try (Connection conn = connection();
+             PreparedStatement majorStmt = conn.prepareStatement(majorQuery);
+             PreparedStatement genderStmt = conn.prepareStatement(genderQuery)) {
+
+            System.out.println("\nSummary Report:");
+
+            // Execute and process major query separately
+            try (ResultSet majorResult = majorStmt.executeQuery()) {
+                System.out.println("\nStudents per Major:");
+                while (majorResult.next()) {
+                    System.out.println(majorResult.getString("major") + ": " + majorResult.getInt("count"));
+                }
+            }
+
+            // Execute and process gender query separately
+            try (ResultSet genderResult = genderStmt.executeQuery()) {
+                System.out.println("\nStudents per Gender:");
+                while (genderResult.next()) {
+                    System.out.println(genderResult.getString("gender") + ": " + genderResult.getInt("count"));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+  
+    public static void exportToCSV(String filepath, Scanner scanner) {
+        // List available tables
+        System.out.println("Available tables to export:");
+        System.out.println("1. students");
+        System.out.println("2. course_grades");
+
+        // Ask user for choice
+        int tableChoice = -1;
+        while (tableChoice != 1 && tableChoice != 2) {
+            System.out.print("Enter the number of the table you want to export (1 or 2): ");
+            if (scanner.hasNextInt()) {
+                tableChoice = scanner.nextInt();
+                if (tableChoice != 1 && tableChoice != 2) {
+                    System.out.println("Invalid choice! Please select 1 or 2.");
+                }
+            } else {
+                System.out.println("Invalid input! Please enter a number.");
+                scanner.nextLine(); // Consume invalid input
+            }
+        }
+        scanner.nextLine(); // Consume newline character after the integer input
+
+        String query = "";
+        String header = "";
+        if (tableChoice == 1) {
+            query = "SELECT id, name, major, gender, birthdate, address, department, username, role FROM students";
+            header = "ID,Name,Major,Gender,Birthdate,Address,Department,Username,Role";
+        } else if (tableChoice == 2) {
+            query = "SELECT id, course_name, course_grade FROM course_grades";
+            header = "ID,Course Name,Course Grade";
+        }
+
+        // Ensure filename ends with .csv
+        if (!filepath.toLowerCase().endsWith(".csv")) {
+            filepath += ".csv";
+        }
+
+        // Export selected table to CSV (overwrite mode)
+        try (Connection conn = connection();
+             PreparedStatement pstmt = conn.prepareStatement(query);
+             ResultSet result = pstmt.executeQuery();
+             BufferedWriter writer = new BufferedWriter(new FileWriter(filepath, false))) { // false = overwrite
+
+            // Write the header once
+            writer.write(header);
+            writer.newLine();
+
+            // Write each record from the table to the CSV file
+            while (result.next()) {
+                if (tableChoice == 1) {
+                    writer.write(result.getString("id") + "," +
+                            result.getString("name") + "," +
+                            result.getString("major") + "," +
+                            result.getString("gender") + "," +
+                            result.getString("birthdate") + "," +
+                            result.getString("address") + "," +
+                            result.getString("department") + "," +
+                            result.getString("username") + "," +
+                            result.getString("role"));
+                } else {
+                    writer.write(result.getString("id") + "," +
+                            result.getString("course_name") + "," +
+                            result.getFloat("course_grade"));
+                }
+                writer.newLine();
+            }
+
+            System.out.println("Data exported successfully to " + filepath);
+
+        } catch (IOException | SQLException e) {
+            System.out.println("Error during export: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+  
+    public static void importFromCSV(String filePath) {
+        Scanner scanner = new Scanner(System.in);
+
+        // List available tables
+        System.out.println("Available tables to import into:");
+        System.out.println("1. students");
+        System.out.println("2. course_grades");
+
+        // Ask user for choice
+        System.out.print("Enter the number of the table you want to import into (1 or 2): ");
+        int tableChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline character
+
+        String query = "";
+        if (tableChoice == 1) {
+            query = "INSERT INTO students (id, name, major, gender, birthdate, address, department, username, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        } else if (tableChoice == 2) {
+            query = "INSERT INTO course_grades (id, course_name, course_grade) VALUES (?, ?, ?)";
+        } else {
+            System.out.println("Invalid choice. Exiting.");
+            return;
+        }
+
+        // Check if the file exists
+        File file = new File(filePath);
+        if (!file.exists()) {
+            System.out.println("File not found: " + filePath);
+            return;
+        }
+
+        System.out.println("File path: " + filePath);
+
+        // Import selected table from CSV
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath));
+             Connection conn = connection()) {
+
+            String line;
+            System.out.println("Importing data from CSV...");
+            Set<String> updatedStudentIds = new HashSet<>(); // Track IDs for students whose grades are updated
+
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(","); // Split the CSV line into columns
+
+                if (tableChoice == 1 && data.length == 9) { // students table
+                    // Check for duplicate entry before insertion
+                    String checkQuery = "SELECT COUNT(*) FROM students WHERE id = ?";
+                    try (PreparedStatement checkStmt = conn.prepareStatement(checkQuery)) {
+                        checkStmt.setString(1, data[0].trim());
+                        try (ResultSet rs = checkStmt.executeQuery()) {
+                            if (rs.next() && rs.getInt(1) > 0) {
+                                System.out.println("Duplicate entry for ID: " + data[0].trim() + ". Skipping this record.");
+                                continue; // Skip this row
+                            }
+                        }
+                    }
+
+                    // Insert into students table
+                    try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                        for (int i = 1; i <= 9; i++) {
+                            pstmt.setString(i, data[i - 1].isEmpty() ? null : data[i - 1].trim());
+                        }
+                        pstmt.executeUpdate();
+                    }
+                } else if (tableChoice == 2 && data.length == 3) { // course_grades table
+                    String studentId = data[0].trim();
+                    String courseName = data[1].trim();
+                    String courseGradeStr = data[2].trim();
+
+                    float courseGrade = 0;
+                    if (!courseGradeStr.isEmpty()) {
+                        try {
+                            courseGrade = Float.parseFloat(courseGradeStr);
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid course grade for student ID " + studentId + ". Skipping this row.");
+                            continue;
+                        }
+                    }
+
+                    // Check for duplicate entry before insertion
+                    String checkDuplicateQuery = "SELECT COUNT(*) FROM course_grades WHERE id = ? AND course_name = ?";
+                    try (PreparedStatement checkStmt = conn.prepareStatement(checkDuplicateQuery)) {
+                        checkStmt.setString(1, studentId);
+                        checkStmt.setString(2, courseName);
+                        try (ResultSet rs = checkStmt.executeQuery()) {
+                            if (rs.next() && rs.getInt(1) > 0) {
+                                System.out.println("Duplicate entry found for ID and Course Name: " + studentId + ", " + courseName);
+                                continue; // Skip this row
+                            }
+                        }
+                    }
+
+                    // Insert into course_grades table
+                    try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                        pstmt.setString(1, studentId);
+                        pstmt.setString(2, courseName);
+                        pstmt.setFloat(3, courseGrade);
+                        pstmt.executeUpdate();
+                    }
+
+                    // Add the student ID to the set of updated IDs
+                    updatedStudentIds.add(studentId);
+                } else {
+                    System.out.println("Skipping invalid line: " + line);
+                    continue;
+                }
+            }
+
+            System.out.println("Data imported successfully from " + filePath);
+
+        } catch (IOException | SQLException e) {
+            System.out.println("Error during import: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.println("\nStudent Management System");
+        	System.out.println("\nStudent Management System");
             System.out.println("1. Add Student");
             System.out.println("2. Add Course Grade");
             System.out.println("3. Remove Course Grade");
             System.out.println("4. Update Student");
             System.out.println("5. Delete Student");
-            System.out.println("6. View Students (Ascending order by ID)");
-            System.out.println("7. View Course Grades (Ascending order by ID)");
+            System.out.println("6. View Students");
+            System.out.println("7. View Course Grades");
             System.out.println("8. Search Student");
             System.out.println("9. Search Course Grade");
-            System.out.println("10. Exit");
+            System.out.println("10. Summary Report");
+            System.out.println("11. Export Data to CSV");
+            System.out.println("12. Import Data from CSV");
+            System.out.println("13. Exit");
 
             System.out.print("Select an option: ");
+            if (!scanner.hasNextInt()) {
+                System.out.println("Invalid input! Please enter a number.");
+                scanner.next();  // Clear invalid input
+                continue;
+            }
+            
             int choice = scanner.nextInt();
             scanner.nextLine();  // Consume the newline character
 
@@ -362,6 +631,7 @@ public class SimpleStudentManagement {
 
                 case 3:
                     // Remove Course Grade
+                	viewCourseGrades();
                     System.out.print("Enter student ID: ");
                     String removeId = scanner.nextLine();
                     System.out.print("Enter course name to remove: ");
@@ -371,6 +641,7 @@ public class SimpleStudentManagement {
 
                 case 4:
                     // Update Student
+                	viewStudents();
                     System.out.print("Enter student ID to update: ");
                     String updateId = scanner.nextLine();
                     System.out.print("Enter new name (leave empty to skip): ");
@@ -395,9 +666,10 @@ public class SimpleStudentManagement {
 
                 case 5:
                     // Delete Student
+                	viewStudents();
                     System.out.print("Enter student ID to delete: ");
                     String deleteId = scanner.nextLine();
-                    deleteStudent(deleteId);
+                    deleteStudent(deleteId, scanner);
                     break;
 
                 case 6:
@@ -412,7 +684,7 @@ public class SimpleStudentManagement {
 
                 case 8:
                     // Search Student
-                    System.out.print("Enter student name to search: ");
+                    System.out.print("Enter student name/major/department/phone address/id to search: ");
                     String searchName = scanner.nextLine();
                     searchStudent(searchName);
                     break;
@@ -425,6 +697,25 @@ public class SimpleStudentManagement {
                     break;
 
                 case 10:
+                    // Generate Summary Report
+                    summaryReport();
+                    break;
+
+                case 11:
+                    // Export Data to CSV
+                    System.out.print("Enter filename to export: ");
+                    String exportFile = scanner.nextLine();
+                    exportToCSV(exportFile, scanner);
+                    break;
+
+                case 12:
+                    // Import Data from CSV
+                    System.out.print("Enter filename to import: ");
+                    String importFile = scanner.nextLine();
+                    importFromCSV(importFile);
+                    break;
+
+                case 13:
                     System.out.println("Exiting...");
                     scanner.close();
                     return;
@@ -436,3 +727,7 @@ public class SimpleStudentManagement {
         }
     }
 }
+
+//- Problem with export, when export, there is double header (Idk know why)
+//- More bug but I can't find it yet
+//- Address in database is now treat as phone number.

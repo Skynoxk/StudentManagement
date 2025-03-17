@@ -498,9 +498,6 @@ public class SimpleStudentManagement {
                     String username = data[7].trim();
                     String role = data[8].trim();
 
-                    // Debug: Print the values being processed
-                    System.out.println("Processing: ID=" + id + ", Name=" + name + ", Major=" + major);
-
                     // Check for duplicate entry before insertion
                     String checkQuery = "SELECT COUNT(*) FROM students WHERE id = ?";
                     try (PreparedStatement checkStmt = conn.prepareStatement(checkQuery)) {
@@ -745,7 +742,6 @@ public class SimpleStudentManagement {
     }
 }
 
-//- Problem with export, when export, there is double header (Idk know why)
-//- Import course grades work fine but not student for some reason.
+//- Problem with export, when export, there is double header (Idk know why) and can import course grade but not student.
 //- More bug but I can't find it yet
 //- Address in database is now treat as phone number.

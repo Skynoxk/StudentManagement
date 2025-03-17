@@ -11,9 +11,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.Scanner;
-import java.util.Set;
 
 public class SimpleStudentManagement {
 
@@ -484,19 +482,32 @@ public class SimpleStudentManagement {
 
             String line;
             System.out.println("Importing data from CSV...");
-            Set<String> updatedStudentIds = new HashSet<>(); // Track IDs for students whose grades are updated
 
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(","); // Split the CSV line into columns
 
-                if (tableChoice == 1 && data.length == 9) { // students table
+                if (tableChoice == 1 && data.length == 9) { // Students table
+                    // Manually trim fields
+                    String id = data[0].trim();
+                    String name = data[1].trim();
+                    String major = data[2].trim();
+                    String gender = data[3].trim();
+                    String birthdate = data[4].trim();
+                    String address = data[5].trim();
+                    String department = data[6].trim();
+                    String username = data[7].trim();
+                    String role = data[8].trim();
+
+                    // Debug: Print the values being processed
+                    System.out.println("Processing: ID=" + id + ", Name=" + name + ", Major=" + major);
+
                     // Check for duplicate entry before insertion
                     String checkQuery = "SELECT COUNT(*) FROM students WHERE id = ?";
                     try (PreparedStatement checkStmt = conn.prepareStatement(checkQuery)) {
-                        checkStmt.setString(1, data[0].trim());
+                        checkStmt.setString(1, id);
                         try (ResultSet rs = checkStmt.executeQuery()) {
                             if (rs.next() && rs.getInt(1) > 0) {
-                                System.out.println("Duplicate entry for ID: " + data[0].trim() + ". Skipping this record.");
+                                System.out.println("Duplicate entry for ID: " + id);
                                 continue; // Skip this row
                             }
                         }
@@ -504,12 +515,20 @@ public class SimpleStudentManagement {
 
                     // Insert into students table
                     try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-                        for (int i = 1; i <= 9; i++) {
-                            pstmt.setString(i, data[i - 1].isEmpty() ? null : data[i - 1].trim());
-                        }
+                        pstmt.setString(1, id.isEmpty() ? null : id);
+                        pstmt.setString(2, name.isEmpty() ? null : name);
+                        pstmt.setString(3, major.isEmpty() ? null : major);
+                        pstmt.setString(4, gender.isEmpty() ? null : gender);
+                        pstmt.setString(5, birthdate.isEmpty() ? null : birthdate);
+                        pstmt.setString(6, address.isEmpty() ? null : address);
+                        pstmt.setString(7, department.isEmpty() ? null : department);
+                        pstmt.setString(8, username.isEmpty() ? null : username);
+                        pstmt.setString(9, role.isEmpty() ? null : role);
                         pstmt.executeUpdate();
+                        System.out.println("Successfully inserted: ID=" + id);
                     }
                 } else if (tableChoice == 2 && data.length == 3) { // course_grades table
+                    // Manually trim fields
                     String studentId = data[0].trim();
                     String courseName = data[1].trim();
                     String courseGradeStr = data[2].trim();
@@ -544,9 +563,6 @@ public class SimpleStudentManagement {
                         pstmt.setFloat(3, courseGrade);
                         pstmt.executeUpdate();
                     }
-
-                    // Add the student ID to the set of updated IDs
-                    updatedStudentIds.add(studentId);
                 } else {
                     System.out.println("Skipping invalid line: " + line);
                     continue;
@@ -560,7 +576,6 @@ public class SimpleStudentManagement {
             e.printStackTrace();
         }
     }
-
     
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -593,6 +608,7 @@ public class SimpleStudentManagement {
             switch (choice) {
                 case 1:
                     // Add Student
+                	viewStudents();
                     System.out.println("Enter student details:");
                     System.out.print("ID: ");
                     String id = scanner.nextLine();
@@ -619,6 +635,7 @@ public class SimpleStudentManagement {
 
                 case 2:
                     // Add Course Grade
+                	viewCourseGrades();
                     System.out.print("Enter student ID: ");
                     String studentId = scanner.nextLine();
                     System.out.print("Enter course name: ");
@@ -729,5 +746,6 @@ public class SimpleStudentManagement {
 }
 
 //- Problem with export, when export, there is double header (Idk know why)
+//- Import course grades work fine but not student for some reason.
 //- More bug but I can't find it yet
 //- Address in database is now treat as phone number.

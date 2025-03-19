@@ -339,31 +339,48 @@ public class SimpleStudentManagement {
     }
     
     public static void summaryReport() {
+        String totalQuery = "SELECT COUNT(*) AS total FROM students";
         String majorQuery = "SELECT major, COUNT(*) AS count FROM students GROUP BY major";
         String genderQuery = "SELECT gender, COUNT(*) AS count FROM students GROUP BY gender";
 
         try (Connection conn = connection();
+             PreparedStatement totalStmt = conn.prepareStatement(totalQuery);
              PreparedStatement majorStmt = conn.prepareStatement(majorQuery);
              PreparedStatement genderStmt = conn.prepareStatement(genderQuery)) {
 
+            // Get the total number of students
+            int totalStudents = 0;
+            try (ResultSet totalResult = totalStmt.executeQuery()) {
+                if (totalResult.next()) {
+                    totalStudents = totalResult.getInt("total");
+                }
+            }
+
             System.out.println("\nSummary Report:");
 
-            // Execute and process major query separately
+         // Execute and process major query
             try (ResultSet majorResult = majorStmt.executeQuery()) {
                 System.out.println("\nStudents per Major:");
                 while (majorResult.next()) {
-                    System.out.println(majorResult.getString("major") + ": " + majorResult.getInt("count"));
+                    String major = majorResult.getString("major");
+                    int count = majorResult.getInt("count");
+                    double percentage = (count /totalStudents) * 100;
+                    String output = major + ": " + count + " students (" + ((percentage * 100) / 100.0) + "%)";
+                    System.out.println(output);
                 }
             }
 
-            // Execute and process gender query separately
+            // Execute and process gender query
             try (ResultSet genderResult = genderStmt.executeQuery()) {
                 System.out.println("\nStudents per Gender:");
                 while (genderResult.next()) {
-                    System.out.println(genderResult.getString("gender") + ": " + genderResult.getInt("count"));
+                    String gender = genderResult.getString("gender");
+                    int count = genderResult.getInt("count");
+                    double percentage = (count /totalStudents) * 100;
+                    String output = gender + ": " + count + " students (" + ((percentage * 100) / 100.0) + "%)";
+                    System.out.println(output);
                 }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -742,6 +759,6 @@ public class SimpleStudentManagement {
     }
 }
 
-//- Problem with export, when export, there is double header (Idk know why) and can import course grade but not student.
+//- Problem with export, when export, there is double header (Idk know why)
 //- More bug but I can't find it yet
 //- Address in database is now treat as phone number.

@@ -364,7 +364,7 @@ public class SimpleStudentManagement {
                 while (majorResult.next()) {
                     String major = majorResult.getString("major");
                     int count = majorResult.getInt("count");
-                    double percentage = (count /totalStudents) * 100;
+                    double percentage = (count / (double) totalStudents) * 100;
                     String output = major + ": " + count + " students (" + ((percentage * 100) / 100.0) + "%)";
                     System.out.println(output);
                 }
@@ -376,7 +376,7 @@ public class SimpleStudentManagement {
                 while (genderResult.next()) {
                     String gender = genderResult.getString("gender");
                     int count = genderResult.getInt("count");
-                    double percentage = (count /totalStudents) * 100;
+                    double percentage = (count / (double) totalStudents) * 100;
                     String output = gender + ": " + count + " students (" + ((percentage * 100) / 100.0) + "%)";
                     System.out.println(output);
                 }

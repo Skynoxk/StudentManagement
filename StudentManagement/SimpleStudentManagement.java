@@ -365,7 +365,7 @@ public class SimpleStudentManagement {
                     String major = majorResult.getString("major");
                     int count = majorResult.getInt("count");
                     double percentage = (count / (double) totalStudents) * 100;
-                    String output = major + ": " + count + " students (" + ((percentage * 100) / 100.0) + "%)";
+                    String output = major + ": " + count + " students (" + ((int)(percentage * 100) / 100.0) + "%)";
                     System.out.println(output);
                 }
             }
@@ -377,7 +377,7 @@ public class SimpleStudentManagement {
                     String gender = genderResult.getString("gender");
                     int count = genderResult.getInt("count");
                     double percentage = (count / (double) totalStudents) * 100;
-                    String output = gender + ": " + count + " students (" + ((percentage * 100) / 100.0) + "%)";
+                    String output = gender + ": " + count + " students (" + ((int)(percentage * 100) / 100.0) + "%)";
                     System.out.println(output);
                 }
             }
@@ -522,6 +522,19 @@ public class SimpleStudentManagement {
                         try (ResultSet rs = checkStmt.executeQuery()) {
                             if (rs.next() && rs.getInt(1) > 0) {
                                 System.out.println("Duplicate entry for ID: " + id);
+                                
+                                // Validation: If ID equals "ID", delete it
+                                if ("ID".equals(id)) {
+                                    String deleteQuery = "DELETE FROM students WHERE id = ?";
+                                    try (PreparedStatement deleteStmt = conn.prepareStatement(deleteQuery)) {
+                                        deleteStmt.setString(1, id);
+                                        int deletedRows = deleteStmt.executeUpdate();
+                                        if (deletedRows > 0) {
+                                            System.out.println("Deleted ID: " + id);
+                                        }
+                                    }
+                                }
+
                                 continue; // Skip this row
                             }
                         }
@@ -759,6 +772,6 @@ public class SimpleStudentManagement {
     }
 }
 
-//- Problem with export, when export, there is double header (Idk know why)
+
 //- More bug but I can't find it yet
 //- Address in database is now treat as phone number.

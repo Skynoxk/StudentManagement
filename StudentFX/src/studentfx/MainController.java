@@ -137,11 +137,12 @@ public class MainController implements Initializable {
         return null; // Login failed
     }
 
-    private void loadDashboard(ActionEvent event, String fxmlFile) {
+    private void loadDashboard(String fxmlFile) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
-            Stage stage = (Stage) usernameLogin.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            Stage stage = (Stage)usernameLogin.getScene().getWindow();
+            Scene scene = new Scene(loader.load());
+            stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();

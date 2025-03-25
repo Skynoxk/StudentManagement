@@ -17,7 +17,7 @@ public class SimpleStudentManagement {
 
     public static Connection connection() {
         try {
-            return DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "Daly030105@");
+            return DriverManager.getConnection("jdbc:mysql://localhost:3306/student", "root", "Password");
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

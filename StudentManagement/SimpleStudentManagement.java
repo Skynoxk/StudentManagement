@@ -75,9 +75,9 @@ public class SimpleStudentManagement {
                 return;
             }
 
-            // Ensure course grade is within range
             if (courseGrade < 0 || courseGrade > 100) {
-                courseGrade = 0;
+                System.out.println("Error: Course grade must be between 0 and 100.");
+                return;
             }
 
             // Insert into course_grades table

@@ -23,37 +23,42 @@ public class SimpleStudentManagement {
             return null;
         }
     }
-     
-    // Add students function (Passwords will be hashed when input)
+    
     public static void addStudent(String id, String name, String major, String gender,
-            					String birthdate, String address, String department,
-            					String username, String password, String role) {
-    		String query = "INSERT INTO students (id, name, major, gender, birthdate, address, department, username, password, role) " +
-    						"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String birthdate, String address, String department,
+            String username, String password, String role) {
 
-    		try (Connection conn = connection();
-    				PreparedStatement pstmt = conn.prepareStatement(query)) {
+    	// Validate the role input
+    	if (!role.equalsIgnoreCase("user") && !role.equalsIgnoreCase("admin")) {
+        	System.out.println("Failed to add student: Invalid role provided. Role must be 'user' or 'admin'.");
+        	return; // Exit the method gracefully
+    	}
 
-    			pstmt.setString(1, id.isEmpty() ? null : id);
-    			pstmt.setString(2, name.isEmpty() ? null : name);
-    			pstmt.setString(3, major.isEmpty() ? null : major);
-    			pstmt.setString(4, gender.isEmpty() ? null : gender);
-    			pstmt.setString(5, birthdate.isEmpty() ? null : birthdate);
-    			pstmt.setString(6, address.isEmpty() ? null : address);
-    			pstmt.setString(7, department.isEmpty() ? null : department);
-    			pstmt.setString(8, username.isEmpty() ? null : username);
-    			pstmt.setString(9, password.isEmpty() ? null : PasswordMD5.hashPassword(password));
-    			pstmt.setString(10, role.isEmpty() ? "user" : role);  // Default role is "user"
+    	String query = "INSERT INTO students (id, name, major, gender, birthdate, address, department, username, password, role) " +
+                   		"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    			pstmt.executeUpdate();
-    			System.out.println("Added " + role + " successfully ");
+    	try (Connection conn = connection();
+    		PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-    		} catch (SQLException e) {
-    			e.printStackTrace();
-    		}
+        	pstmt.setString(1, id.isEmpty() ? null : id);
+        	pstmt.setString(2, name.isEmpty() ? null : name);
+        	pstmt.setString(3, major.isEmpty() ? null : major);
+        	pstmt.setString(4, gender.isEmpty() ? null : gender);
+        	pstmt.setString(5, birthdate.isEmpty() ? null : birthdate);
+        	pstmt.setString(6, address.isEmpty() ? null : address);
+        	pstmt.setString(7, department.isEmpty() ? null : department);
+        	pstmt.setString(8, username.isEmpty() ? null : username);
+        	pstmt.setString(9, password.isEmpty() ? null : PasswordMD5.hashPassword(password));
+        	pstmt.setString(10, role);
+        
+        	pstmt.executeUpdate();
+        	System.out.println("Added " + role + " successfully.");
+
+    	} catch (SQLException e) {
+        	e.printStackTrace();
+    	}
     }
-
-
+    
     // Add course and point the calculated average grade from course_grades to grade in students table
     // course_grades table and students table is in the same database called student
     public static void addCourseGrade(String id, String courseName, float courseGrade) {
@@ -647,7 +652,7 @@ public class SimpleStudentManagement {
                     String gender = scanner.nextLine();
                     System.out.print("Birthdate (YYYY-MM-DD): ");
                     String birthdate = scanner.nextLine();
-                    System.out.print("Address: ");
+                    System.out.print("Phone Address: ");
                     String address = scanner.nextLine();
                     System.out.print("Department: ");
                     String department = scanner.nextLine();
@@ -696,7 +701,7 @@ public class SimpleStudentManagement {
                     String updateGender = scanner.nextLine();
                     System.out.print("Enter new birthdate (leave empty to skip): ");
                     String updateBirthdate = scanner.nextLine();
-                    System.out.print("Enter new address (leave empty to skip): ");
+                    System.out.print("Enter new Phone address (leave empty to skip): ");
                     String updateAddress = scanner.nextLine();
                     System.out.print("Enter new department (leave empty to skip): ");
                     String updateDepartment = scanner.nextLine();
@@ -771,7 +776,6 @@ public class SimpleStudentManagement {
         }
     }
 }
-
 
 //- More bug but I can't find it yet
 //- Address in database is now treat as phone number.

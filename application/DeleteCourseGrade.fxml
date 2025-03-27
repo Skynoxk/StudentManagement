@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="600" prefWidth="750" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.DeleteCourseGradeController">
+   <children>
+      <Label layoutX="483.0" layoutY="32.0" prefHeight="51.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-text-fill: black; -fx-font-family: 'Verdana'; -fx-font-size: 30px; -fx-cursor: hand; -fx-border-color: black; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-padding: 5px;" text="Student List" />
+      
+      <Label layoutX="46.0" layoutY="354.0" text="Student ID:" />
+      <TextField fx:id="idField" layoutX="143.0" layoutY="350.0" prefWidth="200.0" />
+      
+      <Label layoutX="46.0" layoutY="405.0" text="Course Name:" />
+      <TextField fx:id="courseNameField" layoutX="143.0" layoutY="401.0" prefWidth="200.0" />
+      
+      <Button layoutX="105.0" layoutY="466.0" onAction="#deleteCourseGrade" prefHeight="36.0" prefWidth="176.0" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 14px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0, 2, 2);" text="Delete Course Grade" />
+      
+      <TableView fx:id="studentTable" layoutX="430.0" layoutY="95.0" prefHeight="489.0" prefWidth="306.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 5, 5); -fx-border-width: 1; -fx-border-color: #ecf0f1;">
+         <columns>
+            <TableColumn fx:id="colID" prefWidth="89.5999755859375" style="-fx-font-size: 14px; -fx-text-fill: #34495e;" text="ID" />
+			<TableColumn fx:id="colCourseName" prefWidth="109.5999755859375" style="-fx-font-size: 14px; -fx-text-fill: #34495e;" text="Course Name" />
+			<TableColumn fx:id="colCourseGrade" minWidth="6.39996337890625" prefWidth="96.0" style="-fx-font-size: 14px; -fx-text-fill: #34495e;" text="Course Grade" />
+         </columns>
+      </TableView>
+      
+      <AnchorPane layoutX="31.0" layoutY="58.0" prefHeight="249.0" prefWidth="380.0" style="-fx-background-color: #a2b7cc; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 5, 5);">
+         <Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;" text="Welcome, Teacher!" />
+         <Label layoutX="20.0" layoutY="67.0" prefHeight="27.0" prefWidth="305.0" style="-fx-font-size: 18px; -fx-text-fill: white;" text="Modify your students grade here 😊" />
+         <ImageView fitHeight="146.0" fitWidth="232.0" layoutX="173.0" layoutY="94.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@../../../../Downloads/Hero-Graphic-1.png" />
+            </image>
+         </ImageView>
+      </AnchorPane>
+      
+   </children>
+</AnchorPane>

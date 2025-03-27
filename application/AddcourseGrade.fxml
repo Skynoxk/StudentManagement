@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="600" prefWidth="750" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.AddcourseController">
+   <children>
+      <Label layoutX="162.0" layoutY="23.0" style="-fx-background-color: transparent; -fx-text-fill: black; -fx-font-family: 'Verdana'; -fx-font-size: 30px; -fx-cursor: hand; -fx-border-color: black; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-padding: 5px;" text="Course Grade Management" />
+      
+      <Label layoutX="138.0" layoutY="434.0" text="Student ID:" />
+      <TextField fx:id="idField" layoutX="234.0" layoutY="430.0" prefWidth="200.0" />
+      
+      <Label layoutX="138.0" layoutY="482.0" text="Course Name:" />
+      <TextField fx:id="courseNameField" layoutX="234.0" layoutY="478.0" prefWidth="200.0" />
+      
+      <Label layoutX="137.0" layoutY="530.0" text="Course Grade:" />
+      <TextField fx:id="courseGradeField" layoutX="234.0" layoutY="526.0" prefWidth="200.0" />
+      
+      <Button layoutX="546.0" layoutY="521.0" onAction="#addCourseGrade" prefHeight="36.0" prefWidth="162.0" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 14px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0, 2, 2);" text="Add Course Grade" />
+      
+      <TableView fx:id="studentTable" layoutX="20.0" layoutY="86.0" prefHeight="271.0" prefWidth="710.0" style="-fx-background-color: white; -fx-border-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 5, 5);">
+         <columns>
+            <TableColumn fx:id="colID" prefWidth="50.0" text="ID" />
+			<TableColumn fx:id="colName" prefWidth="100.0" text="Name" />
+			<TableColumn fx:id="colUsername" prefWidth="100.0" text="Username" />
+			<TableColumn fx:id="colGrade" prefWidth="70.0" text="Grade" />
+			<TableColumn fx:id="colMajor" prefWidth="100.0" text="Major" />
+			<TableColumn fx:id="colGender" prefWidth="80.0" text="Gender" />
+			<TableColumn fx:id="colBirthdate" prefWidth="93.6" text="Birthdate" />
+			<TableColumn fx:id="colAddress" prefWidth="100" text="Address" />
+			<TableColumn fx:id="colDepartment" prefWidth="100.0" text="Department" />
+         </columns>
+      </TableView>
+      <Label layoutX="160.0" layoutY="367.0" style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #34495e; -fx-font-family: 'Arial Rounded MT Bold'" text="Add Course Grade of Student" />
+      
+   </children>
+</AnchorPane>

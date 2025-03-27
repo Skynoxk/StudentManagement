@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="mainContent" prefHeight="309.0" prefWidth="1016.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SearchCourseGradeController">
+   <children>
+      
+      <TableView fx:id="studentTable" layoutX="181.0" layoutY="86.0" prefHeight="191.0" prefWidth="654.0" style="-fx-background-color: white; -fx-border-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 5, 5);">
+         <columns>
+            <TableColumn fx:id="colID" prefWidth="123.99996566772461" text="ID" />
+            <TableColumn fx:id="colCourseName" prefWidth="324.80006408691406" text="Course Name" />
+            <TableColumn fx:id="colCourseGrade" prefWidth="196.800048828125" text="Course Grade" />
+         </columns>
+      </TableView>
+   	  <TextField fx:id="searchField" layoutX="258.0" layoutY="14.0" prefHeight="40.0" prefWidth="500.0" promptText="Enter Course Name" style="-fx-background-radius: 20; -fx-font-size: 14px; -fx-padding: 5px;" />
+      <Button fx:id="searchButton" layoutX="678.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleSearch" prefHeight="40.0" prefWidth="80.0" style="-fx-background-radius: 25; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-color: #2C3E50; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 3, 3);" text="Search" />
+      
+   </children>
+</AnchorPane>

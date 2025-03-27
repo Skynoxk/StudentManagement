@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="600" prefWidth="1000" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.TeacherDashboardController">
+   <children>
+      <!-- Sidebar -->
+      <AnchorPane prefHeight="600" prefWidth="250" style="-fx-background-color: #2C3E50;">
+        <Label layoutX="130.0" layoutY="30.0" prefHeight="70.0" prefWidth="70.0" style="-fx-font-weight: bold; -fx-text-fill: white; -fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 40px" text="ITC" />
+
+        <Button layoutX="-11.0" layoutY="135.0" onAction="#showAddStudentForm" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-effect: dropshadow(gaussian, black, 3, 0, 0, 2);" text="👥   Add Student" />
+        <Button layoutX="6.0" layoutY="177.0" onAction="#showAddCourseGradeForm" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-effect: dropshadow(gaussian, black, 3, 0, 0, 2);" text="✅   Add Course Grade" />
+        <Button layoutX="-3.0" layoutY="261.0" onAction="#showUpdateStudentForm" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-effect: dropshadow(gaussian, black, 3, 0, 0, 2);" text="📝   Update Student" />
+        <Button layoutX="-1.0" layoutY="302.0" onAction="#showDeleteStudentForm" prefWidth="210.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-effect: dropshadow(gaussian, black, 3, 0, 0, 2);" text="❌   Remove Student" />
+    	<Button layoutX="-10.0" layoutY="343.0" onAction="#showViewStudentForm" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-effect: dropshadow(gaussian, black, 3, 0, 0, 2);" text="🗓   View Students" />
+    	<Button layoutX="12.0" layoutY="428.0" onAction="#showViewCourseGradeForm" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-effect: dropshadow(gaussian, black, 3, 0, 0, 2);" text="📖   View Course Grades" />
+        <Button layoutX="20.0" layoutY="219.0" onAction="#showRemoveCourseGradeForm" prefWidth="210.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-effect: dropshadow(gaussian, black, 3, 0, 0, 2);" text="📑   Remove Course Grade" />
+        <Button layoutX="-6.0" layoutY="386.0" onAction="#showSearchStudentForm" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-effect: dropshadow(gaussian, black, 3, 0, 0, 2);" text="🔍   Search Student" />
+        <Button layoutX="17.0" layoutY="470.0" onAction="#showSearchCourseGradeForm" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-effect: dropshadow(gaussian, black, 3, 0, 0, 2);" text="📚   Search Course Grade" />
+
+        <Button layoutX="20.0" layoutY="558.0" onAction="#handleLogout" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: red; -fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 14px;" text="🚪 Logout" />
+        <ImageView fx:id="logoImageView" fitHeight="80.0" fitWidth="87.0" layoutX="30.0" layoutY="25.0">
+               <Image url="@../images/Logo-ITC.png" />
+        </ImageView>
+         <Button layoutX="3.0" layoutY="512.0" onAction="#showSummaryReportForm" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-effect: dropshadow(gaussian, black, 3, 0, 0, 2);" text="📊   Summary Report" />
+      </AnchorPane>
+
+      <!-- Main Content Area -->
+      <AnchorPane fx:id="mainContent" layoutX="250" layoutY="0" prefHeight="600" prefWidth="750" style="-fx-background-color: white;">
+         <!-- Content will be loaded dynamically here -->
+      </AnchorPane>
+
+   </children>
+</AnchorPane>

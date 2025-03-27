@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="mainContent" prefHeight="309.0" prefWidth="1016.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ViewCourseGradeUser">
+   <children>
+      
+      <TableView fx:id="studentTable" layoutX="166.0" layoutY="92.0" prefHeight="178.0" prefWidth="683.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 5, 5); -fx-border-width: 1; -fx-border-color: #ecf0f1;">
+         <columns>
+            <TableColumn fx:id="colID" prefWidth="89.5999755859375" style="-fx-font-size: 14px; -fx-text-fill: #34495e;" text="ID" />
+			<TableColumn fx:id="colCourseName" prefWidth="439.2000274658203" style="-fx-font-size: 14px; -fx-text-fill: #34495e;" text="Course Name" />
+			<TableColumn fx:id="colCourseGrade" minWidth="6.39996337890625" prefWidth="145.5999755859375" style="-fx-font-size: 14px; -fx-text-fill: #34495e;" text="Course Grade" />
+         </columns>
+      </TableView>
+      
+      <Label layoutX="294.0" layoutY="14.0" prefHeight="51.0" prefWidth="428.0" style="-fx-background-color: transparent; -fx-text-fill: black; -fx-font-family: 'Verdana'; -fx-font-size: 30px; -fx-cursor: hand; -fx-border-color: black; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-padding: 5px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 2, 2)" text="Grades Management Table" />
+
+   </children>
+</AnchorPane>

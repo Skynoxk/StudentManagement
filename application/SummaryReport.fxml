@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="600" prefWidth="750" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SummaryReportController">
+    
+   <Label layoutX="240.0" layoutY="26.0" style="-fx-background-color: transparent; -fx-text-fill: black; -fx-font-family: 'Verdana'; -fx-font-size: 30px; -fx-border-color: black; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-padding: 5px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 2, 2)" text="Summary Report" />
+   
+   <AnchorPane layoutX="14.0" layoutY="130.0" prefHeight="238.0" prefWidth="390.0" style="-fx-background-color: #E8E8E8; -fx-background-radius: 10; -fx-border-color: black; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-padding: 5px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 5, 5);">
+      <children>
+          <PieChart fx:id="pieChartMajor" layoutX="7.0" layoutY="9.0" prefHeight="210.0" prefWidth="368.0" />
+      </children>
+   </AnchorPane>
+   <AnchorPane layoutX="421.0" layoutY="130.0" prefHeight="313.0" prefWidth="307.0" style="-fx-background-color: #E8E8E8; -fx-background-radius: 10; -fx-border-color: black; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-padding: 5px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 5, 5);">
+      <children>
+          <PieChart fx:id="pieChartGender" prefHeight="302.0" prefWidth="294.0" />
+      </children>
+   </AnchorPane>
+    <Label layoutX="118.0" layoutY="386.0" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-font-family: 'Arial Rounded MT Bold'" text="Students per Major" />
+    <Label layoutX="478.0" layoutY="463.0" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-font-family: 'Arial Rounded MT Bold'" text="Students per Gender" />
+    
+</AnchorPane>

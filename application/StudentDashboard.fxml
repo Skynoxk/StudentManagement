@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="349.0" prefWidth="1016.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.StudentDashboardController">
+     
+     <AnchorPane prefHeight="235.0" prefWidth="1016.0" style="-fx-background-color: #2C3E50;">
+         <children>
+           <Label layoutX="239.0" layoutY="144.0" prefHeight="67.0" prefWidth="540.0" style="-fx-font-weight: bold; -fx-text-fill: white; -fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 30px" text="Institude of Technology of Cambodia" />
+      
+                 <ImageView fx:id="logoImageView" fitHeight="117.0" fitWidth="127.0" layoutX="445.0" layoutY="27.0">
+                  <Image url="@../images/Logo-ITC.png" />
+           </ImageView>
+         </children>
+      </AnchorPane>
+         
+       <AnchorPane fx:id="mainContent" layoutY="295.0" prefHeight="309.0" prefWidth="1016.0" style="-fx-background-color: white;">
+         <!-- Content will be loaded dynamically here -->
+       </AnchorPane>
+      
+            <AnchorPane layoutY="235.0" prefHeight="67.0" prefWidth="1016.0" style="-fx-background-color: white;">
+          <Button layoutX="35.0" layoutY="21.0" onAction="#showViewStudentForm" prefHeight="34.0" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: black; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: black; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-padding: 5px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 2, 2)" text="🗓   View All Students" />
+          <Button layoutX="274.0" layoutY="21.0" onAction="#showSearchStudentForm" prefHeight="34.0" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: black; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: black; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-padding: 5px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 2, 2)" text="🔍   Search Students" />
+          <Button layoutX="516.0" layoutY="20.0" onAction="#showSearchCourseGradeForm" prefHeight="34.0" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: black; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: black; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-padding: 5px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 2, 2)" text="📚   Search Course Grade" />
+          <Button layoutX="763.0" layoutY="20.0" onAction="#showViewCourseGradeForm" prefHeight="34.0" prefWidth="210" style="-fx-background-color: transparent; -fx-text-fill: black; -fx-font-family: 'Verdana'; -fx-font-size: 14px; -fx-cursor: hand; -fx-border-color: black; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-padding: 5px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 2, 2)" text="📖   View Course Grades" />
+       </AnchorPane>
+</AnchorPane>

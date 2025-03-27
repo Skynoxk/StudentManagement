@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="mainContent" prefHeight="309.0" prefWidth="1016.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ViewStudentUser">
+   <children>
+      <TableView fx:id="studentTable" layoutX="47.0" layoutY="38.0" prefHeight="230.0" prefWidth="898.0" style="-fx-background-color: white; -fx-border-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 5, 5);">
+         <columns>
+            <TableColumn fx:id="colID" prefWidth="63.999996185302734" text="ID" />
+			<TableColumn fx:id="colName" prefWidth="73.60000610351562" text="Name" />
+			<TableColumn fx:id="colUsername" prefWidth="141.6000518798828" text="Username" />
+			<TableColumn fx:id="colGrade" minWidth="5.5999755859375" prefWidth="85.5999755859375" text="Grade" />
+			<TableColumn fx:id="colMajor" prefWidth="100.0" text="Major" />
+			<TableColumn fx:id="colGender" prefWidth="72.79998779296875" text="Gender" />
+			<TableColumn fx:id="colBirthdate" prefWidth="100.79998779296875" text="Birthdate" />
+			<TableColumn fx:id="colAddress" prefWidth="124.0" text="Address" />
+			<TableColumn fx:id="colDepartment" prefWidth="135.2000732421875" text="Department" />
+         </columns>
+      </TableView>
+   </children>
+</AnchorPane>

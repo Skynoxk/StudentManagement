@@ -1,0 +1,10 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.gradient {
+    -fx-background-color: linear-gradient(to bottom right, #3cdbff,#b4a3ff);
+}
+#createAccLabel{
+    -fx-alignment: CENTER;
+}

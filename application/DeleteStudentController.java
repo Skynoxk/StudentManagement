@@ -31,12 +31,24 @@ public class DeleteStudentController implements Initializable{
 	
 	@FXML
     private TableView<Student> studentTable;
-    @FXML
+	@FXML
     private TableColumn<Student, String> colID;
     @FXML
-    private TableColumn<Student, String> colCourseName;
+    private TableColumn<Student, String> colName;
     @FXML
-    private TableColumn<Student, String> colCourseGrade;
+    private TableColumn<Student, String> colUsername;
+    @FXML
+    private TableColumn<Student, String> colGrade;
+    @FXML
+    private TableColumn<Student, String> colMajor;
+    @FXML
+    private TableColumn<Student, String> colGender;
+    @FXML
+    private TableColumn<Student, String> colBirthdate;
+    @FXML
+    private TableColumn<Student, String> colAddress;
+    @FXML
+    private TableColumn<Student, String> colDepartment;
 	
     private ObservableList<Student> studentsList = FXCollections.observableArrayList();
     
@@ -46,9 +58,15 @@ public class DeleteStudentController implements Initializable{
     }
     
     private void setupTableColumns() {
-        colID.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colCourseName.setCellValueFactory(new PropertyValueFactory<>("courseName"));
-        colCourseGrade.setCellValueFactory(new PropertyValueFactory<>("courseGrade"));
+    	colID.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        colUsername.setCellValueFactory(new PropertyValueFactory<>("username"));
+        colGrade.setCellValueFactory(new PropertyValueFactory<>("grade"));
+        colMajor.setCellValueFactory(new PropertyValueFactory<>("major"));
+        colGender.setCellValueFactory(new PropertyValueFactory<>("gender"));
+        colBirthdate.setCellValueFactory(new PropertyValueFactory<>("birthdate"));
+        colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
+        colDepartment.setCellValueFactory(new PropertyValueFactory<>("department"));
     }
     
     private void loadStudentData() {
@@ -56,16 +74,22 @@ public class DeleteStudentController implements Initializable{
             @Override
             protected ObservableList<Student> call() throws Exception {
                 ObservableList<Student> tempList = FXCollections.observableArrayList();
-                String query = "SELECT * FROM course_grades ORDER BY id";
+                String query = "SELECT * FROM students ORDER BY id";
                 try (Connection conn = Database.getConnection();
                      PreparedStatement pstmt = conn.prepareStatement(query);
                      ResultSet result = pstmt.executeQuery()) {
                     while (result.next()) {
                         // Ensure course_grade is stored as a string
                         tempList.add(new Student(
-                            result.getString("id"),
-                            result.getString("course_name"),
-                            result.getString("course_grade") // Now keeping it as String for consistent handling
+                        		result.getString("id"),
+                                result.getString("name"),
+                                result.getString("username"),
+                                result.getString("grade"),
+                                result.getString("major"),
+                                result.getString("gender"),
+                                result.getString("birthdate"),
+                                result.getString("address"),
+                                result.getString("department")
                         ));
                     }
                 } catch (SQLException e) {
@@ -97,17 +121,29 @@ public class DeleteStudentController implements Initializable{
 
     // Student class definition
     public static class Student {
-        private String id, courseName, courseGrade;
+    	private String id, name, username, grade, major, gender, birthdate, address, department;
 
-        public Student(String id, String courseName, String courseGrade) {
+        public Student(String id, String name, String username, String grade, String major, String gender, String birthdate, String address, String department) {
             this.id = id;
-            this.courseName = courseName;
-            this.courseGrade = courseGrade;
+            this.name = name;
+            this.username = username;
+            this.grade = grade;
+            this.major = major;
+            this.gender = gender;
+            this.birthdate = birthdate;
+            this.address = address;
+            this.department = department;
         }
 
         public String getId() { return id; }
-        public String getCourseName() { return courseName; }
-        public String getCourseGrade() { return courseGrade; }
+        public String getName() { return name; }
+        public String getUsername() { return username; }
+        public String getGrade() { return grade; }
+        public String getMajor() { return major; }
+        public String getGender() { return gender; }
+        public String getBirthdate() { return birthdate; }
+        public String getAddress() { return address; }
+        public String getDepartment() { return department; }
     }
     
 	public static Connection connection() {

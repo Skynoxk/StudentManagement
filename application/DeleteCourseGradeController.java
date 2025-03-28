@@ -57,16 +57,15 @@ public class DeleteCourseGradeController implements Initializable {
             @Override
             protected ObservableList<Student> call() throws Exception {
                 ObservableList<Student> tempList = FXCollections.observableArrayList();
-                String query = "SELECT * FROM course_grades ORDER BY id";
+                String query = "SELECT * FROM course_grades ORDER BY id, course_grade";
                 try (Connection conn = Database.getConnection();
                      PreparedStatement pstmt = conn.prepareStatement(query);
                      ResultSet result = pstmt.executeQuery()) {
                     while (result.next()) {
-                        // Ensure course_grade is stored as a string
                         tempList.add(new Student(
                             result.getString("id"),
                             result.getString("course_name"),
-                            result.getString("course_grade") // Now keeping it as String for consistent handling
+                            result.getString("course_grade") 
                         ));
                     }
                 } catch (SQLException e) {
@@ -95,7 +94,6 @@ public class DeleteCourseGradeController implements Initializable {
         new Thread(loadTask).start();
     }
     
-    // Student class definition
     public static class Student {
         private String id, courseName, courseGrade;
 
@@ -141,11 +139,9 @@ public class DeleteCourseGradeController implements Initializable {
             Connection conn = connection();
             Statement studentmanage = conn.createStatement();
             
-            // Delete the course grade
             studentmanage.executeUpdate("DELETE FROM course_grades WHERE id='" + id 
             		+ "' AND course_name='" + courseName + "'");
 
-            // Recalculate the new average grade after deletion
             float newAverage = calculateAverageGrade(id);
             studentmanage.executeUpdate("UPDATE students SET grade = " + newAverage + " WHERE id = '" + id + "'");
 
@@ -196,7 +192,7 @@ public class DeleteCourseGradeController implements Initializable {
         public static ResultSet executeQuery(String query) throws SQLException {
             Connection conn = getConnection();
             PreparedStatement pstmt = conn.prepareStatement(query);
-            return pstmt.executeQuery(); // Caller must close the ResultSet and Connection
+            return pstmt.executeQuery(); 
         }
     }
 

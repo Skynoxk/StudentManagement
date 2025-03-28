@@ -229,7 +229,7 @@ public class ViewStudentController implements Initializable {
         }
         return false;
     }
-    // Method to check for duplicate entry in the course_grades table
+    // Method to check for duplicate entry in the table
     private boolean isDuplicate(Connection conn, String tableName, String column1, String value1, String column2, String value2) throws SQLException {
         String query = "SELECT COUNT(*) FROM " + tableName + " WHERE " + column1 + " = ? AND " + column2 + " = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -260,7 +260,6 @@ public class ViewStudentController implements Initializable {
             return;
         }
 
-        // Table selection dialog
         List<String> tableOptions = Arrays.asList("students");
         ChoiceDialog<String> choiceDialog = new ChoiceDialog<>("students", tableOptions);
         choiceDialog.setTitle("Select Table");
@@ -278,7 +277,6 @@ public class ViewStudentController implements Initializable {
                 ? "INSERT INTO students (id, name, major, gender, birthdate, address, department, username, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
                 : "INSERT INTO course_grades (id, course_name, course_grade) VALUES (?, ?, ?)";
 
-        // Run import on a background thread
         Task<Void> importTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
@@ -328,7 +326,6 @@ public class ViewStudentController implements Initializable {
         new Thread(importTask).start();
     }
     
-    // Helper method for showing alerts
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);

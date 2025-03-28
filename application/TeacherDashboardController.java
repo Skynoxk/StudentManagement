@@ -94,128 +94,14 @@ public class TeacherDashboardController {
     private void showSummaryReportForm(ActionEvent event) {  
         loadFXML("SummaryReport.fxml");
     }
-
-    @FXML
-    private void loadAddstudent(ActionEvent event) {
-        try {
-            AnchorPane addStudentPane = FXMLLoader.load(getClass().getResource("AddStudent.fxml"));
-            mainContent.getChildren().setAll(addStudentPane);
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to load Add Student form.");
-        }
-    }
-    
-    @FXML
-    private void loadAddcourseGrade(ActionEvent event) {
-        try {
-            AnchorPane addCourseGradePane = FXMLLoader.load(getClass().getResource("AddcourseGrade.fxml"));
-            mainContent.getChildren().setAll(addCourseGradePane);
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to load Add Student form.");
-        }
-    }
-    
-    @FXML
-    private void loadDeletecoursegrade(ActionEvent event) {
-        try {
-            AnchorPane deleteCourseGradePane = FXMLLoader.load(getClass().getResource("DeleteCourseGrade.fxml"));
-            mainContent.getChildren().setAll(deleteCourseGradePane);
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to load Add Student form.");
-        }
-    }
-    
-    @FXML
-    private void loadUpdatestudent(ActionEvent event) {
-        try {
-            AnchorPane addStudentPane = FXMLLoader.load(getClass().getResource("AddStudent.fxml"));
-            mainContent.getChildren().setAll(addStudentPane);
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to load Add Student form.");
-        }
-    }
-    
-    @FXML
-    private void loadDeletestudent(ActionEvent event) {
-        try {
-            AnchorPane addStudentPane = FXMLLoader.load(getClass().getResource("DeleteStudent.fxml"));
-            mainContent.getChildren().setAll(addStudentPane);
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to load Delete Student form.");
-        }
-    }
-    
-    @FXML
-    private void loadViewstudent(ActionEvent event) {
-        try {
-            AnchorPane addStudentPane = FXMLLoader.load(getClass().getResource("ViewStudent.fxml"));
-            mainContent.getChildren().setAll(addStudentPane);
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to load Add Student form.");
-        }
-    }
-    
-    @FXML
-    private void loadSearchstudent(ActionEvent event) {
-        try {
-            AnchorPane addStudentPane = FXMLLoader.load(getClass().getResource("SearchStudent.fxml"));
-            mainContent.getChildren().setAll(addStudentPane);
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to load Search Student form.");
-        }
-    }
-    
-    @FXML
-    private void loadViewCourseGrade(ActionEvent event) {
-        try {
-            AnchorPane addStudentPane = FXMLLoader.load(getClass().getResource("ViewCourseGrade.fxml"));
-            mainContent.getChildren().setAll(addStudentPane);
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to load Search Student form.");
-        }
-    }
-    
-    @FXML
-    private void loadSearchCourseGrade(ActionEvent event) {
-        try {
-            AnchorPane addStudentPane = FXMLLoader.load(getClass().getResource("SearchCourseGrade.fxml"));
-            mainContent.getChildren().setAll(addStudentPane);
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to load Search Course Grades form.");
-        }
-    }
-    
-    @FXML
-    private void loadSummaryReport(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("SummaryReport.fxml"));
-            AnchorPane addStudentPane = loader.load();
-            mainContent.getChildren().setAll(addStudentPane);
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to load Summary Report: " + e.getMessage());
-        }
-    }
-
     
     @FXML
     private void handleLogout(ActionEvent event) {
         try {
-            // Load the main page (Main.fxml)
             Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
-            // Get the current stage using the event source
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
             stage.setResizable(false);
@@ -225,7 +111,6 @@ public class TeacherDashboardController {
         }
     }
 
-    
     private void loadFXML(String fileName) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fileName));

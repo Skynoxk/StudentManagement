@@ -28,10 +28,9 @@ public class SimpleStudentManagement {
             String birthdate, String address, String department,
             String username, String password, String role) {
 
-    	// Validate the role input
     	if (!role.equalsIgnoreCase("user") && !role.equalsIgnoreCase("admin")) {
         	System.out.println("Failed to add student: Invalid role provided. Role must be 'user' or 'admin'.");
-        	return; // Exit the method gracefully
+        	return; 
     	}
 
     	String query = "INSERT INTO students (id, name, major, gender, birthdate, address, department, username, password, role) " +

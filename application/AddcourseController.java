@@ -227,7 +227,7 @@ public class AddcourseController implements Initializable {
     
     public static float calculateAverageGrade(String id) {
     	float averageGrade = 0;
-        String query = "SELECT AVG(new_course_grade) AS avg_grade FROM course_grades WHERE id = ?";
+        String query = "SELECT AVG(course_grade) AS avg_grade FROM course_grades WHERE id = ?";
         
         try (Connection conn = connection();
              PreparedStatement stmt = conn.prepareStatement(query)) {

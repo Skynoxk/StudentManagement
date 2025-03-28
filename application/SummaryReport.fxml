@@ -10,7 +10,7 @@
    
    <AnchorPane layoutX="14.0" layoutY="130.0" prefHeight="238.0" prefWidth="390.0" style="-fx-background-color: #E8E8E8; -fx-background-radius: 10; -fx-border-color: black; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-padding: 5px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 5, 5);">
       <children>
-          <PieChart fx:id="pieChartMajor" layoutX="7.0" layoutY="9.0" prefHeight="210.0" prefWidth="368.0" />
+          <PieChart fx:id="pieChartMajor" layoutX="-9.0" layoutY="28.0" prefHeight="150.0" prefWidth="392.0" />
       </children>
    </AnchorPane>
    <AnchorPane layoutX="421.0" layoutY="130.0" prefHeight="313.0" prefWidth="307.0" style="-fx-background-color: #E8E8E8; -fx-background-radius: 10; -fx-border-color: black; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-padding: 5px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 5, 5);">

@@ -79,7 +79,6 @@ public class DeleteStudentController implements Initializable{
                      PreparedStatement pstmt = conn.prepareStatement(query);
                      ResultSet result = pstmt.executeQuery()) {
                     while (result.next()) {
-                        // Ensure course_grade is stored as a string
                         tempList.add(new Student(
                         		result.getString("id"),
                                 result.getString("name"),
@@ -118,8 +117,6 @@ public class DeleteStudentController implements Initializable{
         new Thread(loadTask).start();
     }
     
-
-    // Student class definition
     public static class Student {
     	private String id, name, username, grade, major, gender, birthdate, address, department;
 
@@ -182,7 +179,6 @@ public class DeleteStudentController implements Initializable{
              PreparedStatement pstmtGrades = conn.prepareStatement(deleteGradesQuery);
              PreparedStatement pstmtStudent = conn.prepareStatement(deleteStudentQuery)) {
 
-            // Delete related course grades first
             pstmtGrades.setString(1, id);
             pstmtGrades.executeUpdate();
 
@@ -221,7 +217,7 @@ public class DeleteStudentController implements Initializable{
         public static ResultSet executeQuery(String query) throws SQLException {
             Connection conn = getConnection();
             PreparedStatement pstmt = conn.prepareStatement(query);
-            return pstmt.executeQuery(); // Caller must close the ResultSet and Connection
+            return pstmt.executeQuery(); 
         }
     }
 

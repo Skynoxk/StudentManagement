@@ -152,7 +152,6 @@ public class SearchStudentController {
         searchStudentFromDatabase();
     }
 
-    // Student class definition
     public class Student {
         private final StringProperty id, name, username, grade, major, gender, birthdate, address, department;
 

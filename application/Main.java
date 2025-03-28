@@ -13,7 +13,6 @@ import javafx.stage.Stage;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
-
         try {
             Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
             Scene scene = new Scene(root);
@@ -24,7 +23,6 @@ public class Main extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-      
     }
     /**
      * @param args the command line arguments
